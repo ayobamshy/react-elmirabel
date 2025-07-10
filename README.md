@@ -15,7 +15,7 @@ A modern React-based e-commerce website for El-Mirabel Bar & Lounge, featuring a
 
 ## 🚀 Live Demo
 
-Visit the live website: [El-Mirabel Bar & Lounge](https://[your-github-username].github.io/react-elmirabel)
+Visit the live website: [El-Mirabel Bar & Lounge](https://ayobamshy.github.io/react-elmirabel)
 
 ## 🛠️ Tech Stack
 
@@ -23,13 +23,14 @@ Visit the live website: [El-Mirabel Bar & Lounge](https://[your-github-username]
 - **Vite** - Fast build tool and dev server
 - **React Router** - Client-side routing
 - **Tailwind CSS** - Utility-first CSS framework
+- **Framer Motion** - Professional animations
 - **Local Storage** - Cart persistence
 
 ## 📦 Installation
 
 1. **Clone the repository**
    ```bash
-   git clone https://github.com/[your-github-username]/react-elmirabel.git
+   git clone https://github.com/ayobamshy/react-elmirabel.git
    cd react-elmirabel
    ```
 
