@@ -1,88 +1,53 @@
-import React from 'react';
-import { Link } from 'react-router-dom';
 import { motion } from 'framer-motion';
+import { Link } from 'react-router-dom';
 
-function Hero() {
+export default function Hero() {
   return (
-    <section className="relative h-screen flex items-center justify-center overflow-hidden">
-      {/* Background Image */}
-      <div className="absolute inset-0 z-0">
-        <img
-          src="/images/index/wine-rack.jpeg"
-          alt="El-Mirabel Wine Collection"
-          className="w-full h-full object-cover"
-        />
-        <div className="absolute inset-0 bg-black bg-opacity-50"></div>
-      </div>
-
+    <section className="relative flex items-center justify-center min-h-[60vh] md:min-h-[70vh] bg-[#fff7ed] overflow-hidden">
+      {/* Background Image Overlay */}
+      <img
+        src="/images/index/wine-rack.jpeg"
+        alt="Wine bottles background"
+        className="absolute inset-0 w-full h-full object-cover opacity-30 z-0"
+        style={{ filter: 'blur(2px)' }}
+      />
+      <div className="absolute inset-0 bg-gradient-to-br from-[#fff7ed]/80 via-[#7c2d12]/20 to-[#fff7ed]/90 z-10" />
       {/* Hero Content */}
-      <div className="relative z-10 text-center text-white px-4 max-w-4xl mx-auto">
-        <motion.h1 
-          initial={{ opacity: 0, y: 30 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.8 }}
-          className="text-5xl md:text-7xl font-bold mb-6 font-serif"
-        >
-          El-Mirabel
-        </motion.h1>
-        
-        <motion.p 
-          initial={{ opacity: 0, y: 30 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.8, delay: 0.2 }}
-          className="text-xl md:text-2xl mb-8 text-gray-200 font-light"
-        >
-          Premium Wines & Unforgettable Events
-        </motion.p>
-        
-        <motion.div 
-          initial={{ opacity: 0, y: 30 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.8, delay: 0.4 }}
-          className="flex flex-col sm:flex-row gap-4 justify-center"
-        >
-          <Link to="/">
-            <motion.button
-              whileHover={{ scale: 1.05 }}
-              whileTap={{ scale: 0.95 }}
-              className="bg-white text-gray-900 px-8 py-4 rounded-lg font-semibold text-lg hover:bg-gray-100 transition-colors"
-            >
-              Explore Wines
-            </motion.button>
-          </Link>
-          <Link to="/reservation">
-            <motion.button
-              whileHover={{ scale: 1.05 }}
-              whileTap={{ scale: 0.95 }}
-              className="border-2 border-white text-white px-8 py-4 rounded-lg font-semibold text-lg hover:bg-white hover:text-gray-900 transition-colors"
-            >
-              Book Event
-            </motion.button>
-          </Link>
-        </motion.div>
-      </div>
-
-      {/* Scroll Indicator */}
-      <motion.div 
-        initial={{ opacity: 0 }}
-        animate={{ opacity: 1 }}
-        transition={{ duration: 1, delay: 1 }}
-        className="absolute bottom-8 left-1/2 transform -translate-x-1/2"
+      <motion.div
+        initial={{ opacity: 0, y: 40 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ duration: 0.8, ease: 'easeOut' }}
+        className="relative z-20 max-w-3xl w-full mx-4 md:mx-auto rounded-3xl p-8 md:p-14 flex flex-col items-center text-center"
       >
-        <motion.div
-          animate={{ y: [0, 10, 0] }}
-          transition={{ duration: 2, repeat: Infinity }}
-          className="w-6 h-10 border-2 border-white rounded-full flex justify-center"
+        <motion.h1
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ delay: 0.2, duration: 0.7 }}
+          className="text-4xl md:text-6xl font-extrabold text-[#7c2d12] drop-shadow-lg mb-4"
         >
-          <motion.div
-            animate={{ y: [0, 12, 0] }}
-            transition={{ duration: 2, repeat: Infinity }}
-            className="w-1 h-3 bg-white rounded-full mt-2"
-          ></motion.div>
+          Discover Premium Wines & Unforgettable Moments
+        </motion.h1>
+        <motion.p
+          initial={{ opacity: 0, y: 10 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ delay: 0.4, duration: 0.7 }}
+          className="text-lg md:text-2xl text-[#a16207] font-medium mb-8"
+        >
+          Experience the finest selection of wines from around the world in an atmosphere of elegance and sophistication.
+        </motion.p>
+        <motion.div
+          initial={{ opacity: 0, scale: 0.9 }}
+          animate={{ opacity: 1, scale: 1 }}
+          transition={{ delay: 0.6, duration: 0.5 }}
+        >
+          <Link
+            to="/catalog"
+            className="inline-block px-8 py-3 rounded-full bg-[#7c2d12] text-white font-bold text-lg shadow-lg hover:bg-[#a16207] transition-colors duration-200"
+          >
+            Shop Wines
+          </Link>
         </motion.div>
       </motion.div>
     </section>
   );
-}
-
-export default Hero; 
+} 

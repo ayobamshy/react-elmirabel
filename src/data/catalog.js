@@ -1,46 +1,60 @@
 const catalog = [
   {
-    id: 0,
-    image: '/images/catalog/borsao.avif',
-    name: 'Borsao',
-    price: 75000
-  },
-  {
     id: 1,
-    image: '/images/catalog/broadleaf.avif',
-    name: 'broadleaf',
-    price: 68000
+    name: 'Borsao Garnacha',
+    description: 'A vibrant Spanish red with notes of cherry and spice.',
+    price: 85000,
+    image: '/images/catalog/borsao.avif',
+    featured: true,
   },
   {
     id: 2,
-    image: '/images/catalog/chianti.avif',
-    name: 'chianti',
-    price: 82000
+    name: 'Broadleaf Sauvignon Blanc',
+    description: 'Crisp, refreshing white with citrus and green apple.',
+    price: 78000,
+    image: '/images/catalog/broadleaf.avif',
+    featured: true,
   },
   {
     id: 3,
-    image: '/images/catalog/paros.avif',
-    name: 'paros',
-    price: 79000
+    name: 'Chianti Classico',
+    description: 'Classic Italian red, medium-bodied with earthy notes.',
+    price: 90000,
+    image: '/images/catalog/chianti.avif',
+    featured: true,
   },
   {
     id: 4,
-    image: '/images/catalog/rasteau.avif',
-    name: 'rasteau',
-    price: 81000
+    name: 'Paros Rosé',
+    description: 'Elegant rosé with wild strawberry and floral aromas.',
+    price: 72000,
+    image: '/images/catalog/paros.avif',
+    featured: true,
   },
   {
     id: 5,
-    image: '/images/catalog/rose.avif',
-    name: 'rose',
-    price: 70000
+    name: 'Rasteau Côtes du Rhône',
+    description: 'Rich, spicy Rhône blend with dark fruit flavors.',
+    price: 95000,
+    image: '/images/catalog/rasteau.avif',
+    featured: true,
   },
   {
     id: 6,
+    name: 'Talamonti Trebi',
+    description: 'Italian white, fresh and lively with stone fruit.',
+    price: 80000,
     image: '/images/catalog/talamonti.avif',
-    name: 'talamonti',
-    price: 90000
-  }
+    featured: true,
+  },
+  {
+    id: 7,
+    name: 'Mirabel Rosé',
+    description: 'House rosé, light and crisp with red berry notes.',
+    price: 70000,
+    image: '/images/catalog/rose.avif',
+    featured: false,
+  },
 ];
 
 export default catalog;

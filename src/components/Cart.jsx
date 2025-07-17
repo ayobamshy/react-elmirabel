@@ -34,7 +34,7 @@ function Cart() {
                     <tr key={item.id} className="border-b">
                       <td>
                         <button
-                          className="text-red-500 hover:text-red-700 text-lg"
+                          className="text-red-500 hover:text-red-700 text-lg rounded-full bg-red-50 px-2 py-1"
                           onClick={() => removeFromCart(item.id)}
                           aria-label={`Remove ${item.name}`}
                         >
@@ -42,7 +42,7 @@ function Cart() {
                         </button>
                       </td>
                       <td>
-                        <img src={item.image} alt={item.name} className="h-20 w-14 object-cover rounded" />
+                        <img src={item.image} alt={`Bottle of ${item.name} wine`} className="h-20 w-14 object-cover rounded-xl bg-white" />
                       </td>
                       <td className="capitalize font-semibold">{item.name}</td>
                       <td>NGN {item.price.toLocaleString()}</td>
