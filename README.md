@@ -1,165 +1,117 @@
-# El-Mirabel Bar & Lounge - Wine E-commerce Website
+# El-Mirabel Wine Shop
 
-A modern React-based e-commerce website for El-Mirabel Bar & Lounge, featuring a premium wine catalog, shopping cart functionality, event reservations, and more.
-
-## 🍷 Features
-
-- **Wine Catalog**: Browse and search through premium wine collection
-- **Shopping Cart**: Add items, manage quantities, and checkout
-- **Product Details**: Detailed product pages with images and descriptions
-- **Event Reservations**: Contact form for booking events
-- **Events Gallery**: View upcoming and past events
-- **Responsive Design**: Mobile-friendly interface
-- **Price Filtering**: Filter wines by price range
-- **Search Functionality**: Search wines by name
-
-## 🚀 Live Demo
-
-Visit the live website: [El-Mirabel Bar & Lounge](https://ayobamshy.github.io/react-elmirabel)
-
-## 🛠️ Tech Stack
-
-- **React 19** - Modern React with hooks
-- **Vite** - Fast build tool and dev server
-- **React Router** - Client-side routing
-- **Tailwind CSS** - Utility-first CSS framework
-- **Framer Motion** - Professional animations
-- **Local Storage** - Cart persistence
-
-## 📦 Installation
-
-1. **Clone the repository**
-   ```bash
-   git clone https://github.com/ayobamshy/react-elmirabel.git
-   cd react-elmirabel
-   ```
-
-2. **Install dependencies**
-   ```bash
-   npm install
-   ```
-
-3. **Start development server**
-   ```bash
-   npm run dev
-   ```
-
-4. **Open your browser**
-   Navigate to `http://localhost:5173`
-
-## 🏗️ Build for Production
-
-```bash
-npm run build
-```
-
-## 🚀 Deploy to GitHub Pages
-
-### Automatic Deployment (Recommended)
-
-1. **Push to GitHub**: The website automatically deploys when you push to the `main` branch
-2. **GitHub Actions**: The workflow will build and deploy to GitHub Pages
-3. **Settings**: Ensure GitHub Pages is enabled in your repository settings
-
-### Manual Deployment
-
-1. **Build the project**
-   ```bash
-   npm run build
-   ```
-
-2. **Deploy to GitHub Pages**
-   ```bash
-   npm run deploy
-   ```
-
-## 📁 Project Structure
-
-```
-react-elmirabel/
-├── public/
-│   └── images/          # Product and website images
-├── src/
-│   ├── components/      # React components
-│   ├── data/           # Static data (catalog)
-│   ├── App.jsx         # Main app component
-│   └── main.jsx        # App entry point
-├── package.json         # Dependencies and scripts
-└── vite.config.js      # Vite configuration
-```
-
-## 🎨 Customization
-
-### Adding New Wines
-
-Edit `src/data/catalog.js` to add new wine products:
-
-```javascript
-{
-  id: 7,
-  image: '/images/catalog/new-wine.avif',
-  name: 'New Wine Name',
-  price: 85000
-}
-```
-
-### Styling
-
-The project uses Tailwind CSS. Modify `src/index.css` for custom styles.
-
-## 🔧 Configuration
-
-### GitHub Pages Setup
-
-1. Update the `homepage` field in `package.json` with your GitHub username
-2. Ensure the repository is public
-3. Enable GitHub Pages in repository settings
-
-### Environment Variables
-
-Create a `.env` file for environment-specific configurations:
-
-```env
-VITE_APP_TITLE=El-Mirabel Bar & Lounge
-VITE_APP_DESCRIPTION=Premium wine collection and events
-```
-
-## 📱 Responsive Design
-
-The website is fully responsive and works on:
-- Desktop (1024px+)
-- Tablet (768px - 1023px)
-- Mobile (320px - 767px)
-
-## 🐛 Troubleshooting
-
-### Common Issues
-
-1. **Build fails**: Ensure all dependencies are installed
-2. **Images not loading**: Check image paths in `public/images/`
-3. **Routing issues**: Verify `react-router-dom` is installed
-
-### Development Tips
-
-- Use `npm run dev` for development
-- Use `npm run preview` to test production build locally
-- Check browser console for errors
-
-## 📄 License
-
-This project is licensed under the MIT License.
-
-## 🤝 Contributing
-
-1. Fork the repository
-2. Create a feature branch
-3. Make your changes
-4. Submit a pull request
-
-## 📞 Contact
-
-For questions or support, please contact El-Mirabel Bar & Lounge.
+A luxury/premium e-commerce wine shop built with React, Tailwind CSS, and Firebase Auth. Features persistent cart, social login, admin UI, Stripe-ready checkout, editable products/events, and a modern, elegant design.
 
 ---
 
-**Built with ❤️ for El-Mirabel Bar & Lounge**
+## 🏆 Project Overview
+El-Mirabel Wine Shop is a modern, fully functional e-commerce site for premium wines and exclusive events. It is designed for a luxury experience, with:
+- Beautiful, responsive UI (React + Tailwind CSS)
+- Persistent shopping cart
+- Social login (Google, Facebook via Firebase)
+- Admin panel for product/event management
+- Stripe-ready checkout
+- Editable product and event data (in-memory for now)
+- Contact form and event management
+
+---
+
+## ✨ Features
+- **Home, Catalog, Product, Cart, Checkout, Events, Contact pages**
+- **Persistent cart** (localStorage)
+- **Social login** (Google, Facebook)
+- **Admin UI** (add/edit/delete products & events)
+- **Stripe-ready checkout** (form, order summary, placeholder for Stripe integration)
+- **Editable products/events** (in-memory, via admin)
+- **Luxury/premium design** (deep golds, elegant fonts, responsive)
+- **Contact form** (EmailJS placeholder)
+
+---
+
+## 🛠️ Tech Stack
+- **React** (Vite)
+- **Tailwind CSS**
+- **Firebase Auth** (Google, Facebook login)
+- **@stripe/stripe-js** (for Stripe Checkout integration)
+- **EmailJS** (for contact form, placeholder)
+
+---
+
+## 🚀 Getting Started
+
+### 1. **Install dependencies**
+```bash
+npm install
+```
+
+### 2. **Start the dev server**
+```bash
+npm run dev
+```
+
+### 3. **Configure Firebase Auth**
+- Create a Firebase project at https://console.firebase.google.com/
+- Enable Google and Facebook authentication
+- Replace the `firebaseConfig` in `src/components/AuthContext.jsx` with your own keys
+
+### 4. **(Optional) Configure Stripe**
+- Set up a Stripe account at https://dashboard.stripe.com/
+- Integrate Stripe Checkout (see TODOs below)
+
+### 5. **(Optional) Configure EmailJS**
+- Set up an EmailJS account at https://www.emailjs.com/
+- Integrate with the contact form (see TODOs below)
+
+---
+
+## 🌐 Deployment
+- **Vercel** is recommended for free, fast, and easy deployment.
+- Connect your GitHub repo to Vercel and follow the prompts.
+- No special build settings are required (Vite default is fine).
+
+---
+
+## 🔥 TODOs for Production Readiness
+
+- [ ] **Persist admin changes**: Save products/events to a backend or cloud DB (currently in-memory only)
+- [ ] **Stripe integration**: Implement real Stripe Checkout (create session on backend/serverless function)
+- [ ] **EmailJS integration**: Connect contact form to EmailJS or another email service
+- [ ] **Admin access control**: Restrict admin page to specific emails or roles
+- [ ] **Image hosting**: Use a CDN or cloud storage for product/event images
+- [ ] **Validation & error handling**: Add robust form validation and error messages
+- [ ] **Event RSVP/booking**: Allow users to RSVP or book events
+- [ ] **Accessibility & SEO**: Audit and improve for accessibility and search engines
+- [ ] **Testing**: Add unit and integration tests
+- [ ] **Performance optimization**: Audit bundle size, lazy load images/components
+- [ ] **Analytics**: Add Google Analytics or similar
+- [ ] **Legal**: Add privacy policy, terms, and cookie consent if needed
+
+---
+
+## 📂 Project Structure
+
+```
+src/
+  components/      # Header, Footer, AuthContext, CartContext, ProductCard, etc.
+  pages/           # Home, Catalog, Product, Cart, Checkout, Events, Contact, Admin
+  data/            # products.json, events.json
+  index.css        # Tailwind base
+  App.jsx          # Main app with routing
+```
+
+---
+
+## 📝 Notes
+- All product/event changes via admin are in-memory (reset on reload)
+- Social login works out of the box with your Firebase config
+- Stripe and EmailJS are ready for integration (see TODOs)
+- The design is fully responsive and optimized for a luxury experience
+
+---
+
+## 💡 Contributing
+Pull requests and suggestions are welcome!
+
+---
+
+## © 2025 El-Mirabel Wine Shop

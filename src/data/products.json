@@ -1,0 +1,50 @@
+[
+  {
+    "id": 1,
+    "name": "Château Margaux 2015",
+    "description": "A legendary Bordeaux with deep complexity, silky tannins, and a long, elegant finish.",
+    "price": 1200000,
+    "image": "/images/margaux.jpg",
+    "featured": true
+  },
+  {
+    "id": 2,
+    "name": "Opus One 2018",
+    "description": "Iconic Napa Valley blend, rich and powerful with notes of cassis, chocolate, and spice.",
+    "price": 950000,
+    "image": "/images/opusone.jpg",
+    "featured": true
+  },
+  {
+    "id": 3,
+    "name": "Dom Pérignon Vintage 2013",
+    "description": "Prestige Champagne, vibrant and creamy with citrus, almond, and brioche notes.",
+    "price": 700000,
+    "image": "/images/domperignon.jpg",
+    "featured": true
+  },
+  {
+    "id": 4,
+    "name": "Sassicaia 2019",
+    "description": "Super Tuscan masterpiece, elegant and refined with dark fruit and herbal undertones.",
+    "price": 800000,
+    "image": "/images/sassicaia.jpg",
+    "featured": false
+  },
+  {
+    "id": 5,
+    "name": "Penfolds Grange 2017",
+    "description": "Australia’s most celebrated wine, opulent and intense with layers of spice and fruit.",
+    "price": 1100000,
+    "image": "/images/penfolds.jpg",
+    "featured": false
+  },
+  {
+    "id": 6,
+    "name": "Louis Roederer Cristal 2014",
+    "description": "Luxury Champagne, pure and precise with notes of citrus, white flowers, and hazelnut.",
+    "price": 850000,
+    "image": "/images/cristal.jpg",
+    "featured": false
+  }
+]
