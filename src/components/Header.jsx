@@ -1,5 +1,6 @@
 import { Link, NavLink } from 'react-router-dom';
 import { useAuth } from './AuthContext';
+import { useCart } from './CartContext';
 
 const navLinks = [
   { name: 'Home', to: '/' },
@@ -10,6 +11,8 @@ const navLinks = [
 
 export default function Header() {
   const { user, loginGoogle, loginFacebook, logout } = useAuth();
+  const { cart } = useCart();
+  const cartCount = cart.reduce((sum, item) => sum + item.qty, 0);
   return (
     <header className="w-full bg-gradient-to-r from-[#2d1a09] via-[#4b320d] to-[#bfa76a] shadow-xl sticky top-0 z-50">
       <div className="max-w-7xl mx-auto flex items-center justify-between px-4 py-4">
@@ -44,8 +47,10 @@ export default function Header() {
                 <path strokeLinecap="round" strokeLinejoin="round" d="M3 3h2l.4 2M7 13h10l4-8H5.4M7 13L5.4 5M7 13l-2 9m13-9l2 9m-5-9V6a2 2 0 10-4 0v7" />
               </svg>
             </span>
-            {/* Cart count badge (placeholder) */}
-            <span className="absolute -top-1 -right-1 bg-red-600 text-white text-xs font-bold px-2 py-0.5 rounded-full border-2 border-white shadow-md">0</span>
+            {/* Cart count badge */}
+            {cartCount > 0 && (
+              <span className="absolute -top-1 -right-1 bg-red-600 text-white text-xs font-bold px-2 py-0.5 rounded-full border-2 border-white shadow-md">{cartCount}</span>
+            )}
           </Link>
           {/* Auth */}
           {user ? (

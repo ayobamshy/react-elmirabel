@@ -19,12 +19,17 @@ El-Mirabel Wine Shop is a modern, fully functional e-commerce site for premium w
 ## ✨ Features
 - **Home, Catalog, Product, Cart, Checkout, Events, Contact pages**
 - **Persistent cart** (localStorage)
+- **Add-to-cart feedback** (toast notification on product add)
+- **Quantity selection** (choose quantity before adding to cart)
+- **Live cart icon badge** (cart icon in header updates with total items)
 - **Social login** (Google, Facebook)
 - **Admin UI** (add/edit/delete products & events)
 - **Stripe-ready checkout** (form, order summary, placeholder for Stripe integration)
 - **Editable products/events** (in-memory, via admin)
 - **Luxury/premium design** (deep golds, elegant fonts, responsive)
 - **Contact form** (EmailJS placeholder)
+- **Improved homepage** (hero, featured wines, events, testimonials)
+- **Events sync** (homepage and /events page always in sync)
 
 ---
 
@@ -106,6 +111,8 @@ src/
 - Social login works out of the box with your Firebase config
 - Stripe and EmailJS are ready for integration (see TODOs)
 - The design is fully responsive and optimized for a luxury experience
+- Add-to-cart feedback and live cart badge for a modern, user-friendly experience
+- Homepage and events always in sync for a lively, up-to-date feel
 
 ---
 
