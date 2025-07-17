@@ -166,7 +166,7 @@ function Checkout() {
                       <div className="space-y-4">
                         {cart.map((item) => (
                           <div key={item.id} className="flex items-center space-x-4 p-4 bg-gray-50 rounded-lg">
-                            <img src={item.image} alt={item.name} className="w-16 h-16 object-cover rounded-lg" />
+                            <img src={item.image} alt={`Bottle of ${item.name} wine`} className="w-16 h-16 object-cover rounded-xl bg-white" />
                             <div className="flex-1">
                               <h3 className="font-semibold text-gray-900 capitalize">{item.name}</h3>
                               <p className="text-gray-600">Quantity: {item.qty || 1}</p>

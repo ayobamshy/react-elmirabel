@@ -3,7 +3,7 @@ import react from '@vitejs/plugin-react'
 
 // https://vite.dev/config/
 export default defineConfig({
-  base: '/react-elmirabel/', // Set base for GitHub Pages
+  base: '/', // Use '/' for local dev; change to '/react-elmirabel/' for production
   plugins: [react()],
   build: {
     outDir: 'dist',

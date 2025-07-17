@@ -1,88 +1,49 @@
-import React, { useState } from "react";
-import catalog from "../data/catalog";
-import { useCart } from "./CartContext.jsx";
-import { Link } from "react-router-dom";
+import products from '../data/catalog';
+import { Link } from 'react-router-dom';
 
-const priceOptions = [
-  { value: "all", label: "All Prices" },
-  { value: "0-70000", label: "Below NGN 70,000" },
-  { value: "70000-80000", label: "NGN 70,000 - 80,000" },
-  { value: "80000-90000", label: "NGN 80,000 - 90,000" },
-  { value: "90000+", label: "Above NGN 90,000" },
-];
-
-function Catalog() {
-  const [search, setSearch] = useState("");
-  const [price, setPrice] = useState("all");
-  const { addToCart } = useCart();
-
-  const filteredCatalog = catalog.filter((product) => {
-    const matchesSearch = product.name.toLowerCase().includes(search.toLowerCase());
-    let matchesPrice = true;
-    if (price !== "all") {
-      if (price === "90000+") {
-        matchesPrice = product.price > 90000;
-      } else {
-        const [min, max] = price.split("-").map(Number);
-        matchesPrice = product.price >= min && product.price < max;
-      }
+export default function Catalog({ featuredOnly = false }) {
+  let displayProducts = products;
+  // If products have a 'featured' field, filter by it. Otherwise, just take first 6.
+  if (featuredOnly) {
+    if (products.some(p => p.featured)) {
+      displayProducts = products.filter(p => p.featured).slice(0, 6);
+    } else {
+      displayProducts = products.slice(0, 6);
     }
-    return matchesSearch && matchesPrice;
-  });
+  }
+
+  if (!displayProducts.length) {
+    return <div className="text-center text-[#7c2d12] py-12">No products found.</div>;
+  }
 
   return (
-    <section className="py-8 px-4 bg-blue-50 min-h-screen">
-      <div className="flex flex-wrap gap-4 items-center justify-center mb-8">
-        <input
-          type="text"
-          className="p-2 rounded border border-gray-300 min-w-[200px] text-lg"
-          placeholder="Search wines by name..."
-          aria-label="Search wines by name"
-          value={search}
-          onChange={e => setSearch(e.target.value)}
-        />
-        <select
-          className="p-2 rounded border border-gray-300 text-lg"
-          aria-label="Filter by price"
-          value={price}
-          onChange={e => setPrice(e.target.value)}
+    <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-3 gap-8 py-8">
+      {displayProducts.map(product => (
+        <Link
+          to={`/product/${product.id}`}
+          key={product.id}
+          className="group bg-white rounded-2xl shadow-lg border border-[#e5e7eb] flex flex-col overflow-hidden transition-transform hover:-translate-y-1 hover:shadow-2xl"
         >
-          {priceOptions.map(opt => (
-            <option key={opt.value} value={opt.value}>{opt.label}</option>
-          ))}
-        </select>
-      </div>
-      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
-        {filteredCatalog.length === 0 ? (
-          <div className="col-span-full text-center text-gray-500 py-8">No products found. Try a different search or filter.</div>
-        ) : (
-          filteredCatalog.map(product => (
-            <div
-              key={product.id}
-              className="product-item bg-white rounded-xl shadow-md hover:shadow-xl transition-shadow duration-300 flex flex-col items-center p-4 animate-fadeInUp"
-            >
-              <Link to={`/product/${product.id}`}>
-                <img
-                  src={product.image}
-                  alt={product.name}
-                  loading="lazy"
-                  className="w-full max-w-[470px] max-h-[350px] object-cover rounded-lg mb-4"
-                />
-              </Link>
-              <p className="font-semibold text-lg mb-1">{product.name}</p>
-              <p className="text-gray-700 mb-2">NGN {product.price.toLocaleString()}</p>
-              <button
-                className="mt-auto px-4 py-2 bg-yellow-100 text-gray-900 rounded-lg hover:bg-yellow-200 transition-colors"
-                onClick={() => addToCart(product)}
-              >
-                Add to Cart
-              </button>
+          <div className="aspect-w-1 aspect-h-1 w-full flex items-center justify-center overflow-hidden bg-[#f9f6f2]">
+            <img
+              src={product.image}
+              alt={product.name}
+              className="object-cover w-full h-full max-w-[220px] max-h-[220px] rounded-2xl mx-auto group-hover:scale-105 transition-transform duration-300"
+              loading="lazy"
+            />
+          </div>
+          <div className="p-5 flex flex-col flex-1">
+            <h3 className="font-bold text-lg text-[#7c2d12] mb-1 group-hover:text-[#a16207] transition-colors">
+              {product.name}
+            </h3>
+            <p className="text-[#7c2d12]/70 text-sm mb-2 flex-1">{product.description}</p>
+            <div className="flex items-center justify-between mt-2">
+              <span className="font-semibold text-[#a16207] text-lg">₦{product.price.toLocaleString()}</span>
+              <button className="px-4 py-1 rounded-full bg-[#7c2d12] text-white text-sm font-medium shadow hover:bg-[#a16207] transition">View</button>
             </div>
-          ))
-        )}
-      </div>
-    </section>
+          </div>
+        </Link>
+      ))}
+    </div>
   );
 }
-
-export default Catalog;
