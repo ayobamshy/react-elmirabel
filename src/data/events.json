@@ -1,0 +1,50 @@
+[
+  {
+    "id": 1,
+    "title": "Wine Tasting Night",
+    "date": "August 24, 2025",
+    "time": "7:00 PM",
+    "image": "https://images.unsplash.com/photo-1519864600265-abb23847ef2c?auto=format&fit=crop&w=600&q=80",
+    "description": "Join us for an exclusive tasting of rare vintages and new arrivals, guided by our in-house sommelier."
+  },
+  {
+    "id": 2,
+    "title": "Live Jazz & Wine",
+    "date": "September 10, 2025",
+    "time": "8:00 PM",
+    "image": "https://images.unsplash.com/photo-1504674900247-0877df9cc836?auto=format&fit=crop&w=600&q=80",
+    "description": "An evening of smooth jazz, fine wine, and great company. Enjoy curated pairings and live music."
+  },
+  {
+    "id": 3,
+    "title": "Champagne Brunch",
+    "date": "September 21, 2025",
+    "time": "11:00 AM",
+    "image": "https://images.unsplash.com/photo-1464983953574-0892a716854b?auto=format&fit=crop&w=600&q=80",
+    "description": "A sparkling brunch featuring the world’s finest champagnes and gourmet bites."
+  },
+  {
+    "id": 4,
+    "title": "Wine & Cheese Pairing Masterclass",
+    "date": "October 5, 2025",
+    "time": "6:00 PM",
+    "image": "https://images.unsplash.com/photo-1502741338009-cac2772e18bc?auto=format&fit=crop&w=600&q=80",
+    "description": "Discover the art of pairing wine and cheese with our expert-led masterclass."
+  },
+  {
+    "id": 5,
+    "title": "Harvest Festival Gala",
+    "date": "October 19, 2025",
+    "time": "7:30 PM",
+    "image": "https://images.unsplash.com/photo-1514361892635-cebbd82b8bdf?auto=format&fit=crop&w=600&q=80",
+    "description": "Celebrate the harvest season with a gala dinner, live entertainment, and exclusive wine releases."
+  },
+  {
+    "id": 6,
+    "title": "Blind Tasting Challenge",
+    "date": "November 2, 2025",
+    "time": "5:00 PM",
+    "image": "https://images.unsplash.com/photo-1506744038136-46273834b3fb?auto=format&fit=crop&w=600&q=80",
+    "description": "Test your palate in our fun and educational blind tasting competition. Prizes for top tasters!"
+  }
+]
