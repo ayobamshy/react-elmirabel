@@ -1,15 +1,6 @@
 import { useEffect, useState } from 'react';
 import ProductCard from '../components/ProductCard';
-import products from '../data/products.json';
-
-const featuredWines = products.filter(p => p.featured).map((p, i) => ({
-  ...p,
-  image: [
-    'https://images.unsplash.com/photo-1506744038136-46273834b3fb?auto=format&fit=crop&w=600&q=80',
-    'https://images.unsplash.com/photo-1514361892635-cebbd82b8bdf?auto=format&fit=crop&w=600&q=80',
-    'https://images.unsplash.com/photo-1464983953574-0892a716854b?auto=format&fit=crop&w=600&q=80'
-  ][i] || p.image
-}));
+import { useProducts } from '../components/ProductsContext';
 
 const testimonials = [
   {
@@ -28,11 +19,18 @@ const testimonials = [
 
 export default function Home() {
   const [events, setEvents] = useState([]);
+  const { products } = useProducts();
   useEffect(() => {
     import('../data/events.json').then(mod => setEvents(mod.default || mod));
   }, []);
 
   const upcoming = events.slice(0, 2);
+  const featuredWines = products.filter(p => {
+    if (typeof p.featured === 'boolean') return p.featured;
+    if (typeof p.featured === 'string') return p.featured.toLowerCase() === 'true';
+    if (typeof p.featured === 'number') return p.featured === 1;
+    return false;
+  });
 
   return (
     <div className="bg-[#f8f5ef]">

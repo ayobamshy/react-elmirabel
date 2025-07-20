@@ -1,11 +1,9 @@
 import { useEffect, useState } from 'react';
 import ProductCard from '../components/ProductCard';
+import { useProducts } from '../components/ProductsContext';
 
 export default function Catalog() {
-  const [products, setProducts] = useState([]);
-  useEffect(() => {
-    import('../data/products.json').then(mod => setProducts(mod.default || mod));
-  }, []);
+  const { products } = useProducts();
   return (
     <div className="max-w-7xl mx-auto px-2 sm:px-4 py-8 sm:py-12">
       <h1 className="text-3xl sm:text-4xl font-extrabold text-[#bfa76a] mb-8 sm:mb-10 text-center font-serif tracking-widest drop-shadow">Our Collection</h1>
