@@ -11,7 +11,7 @@ const navLinks = [
 ];
 
 export default function Header() {
-  const { user, loginGoogle, loginFacebook, logout } = useAuth();
+  const { user, loginGoogle, loginFacebook, logout, isAdmin } = useAuth();
   const { cart } = useCart();
   const cartCount = cart.reduce((sum, item) => sum + item.qty, 0);
   const [menuOpen, setMenuOpen] = useState(false);
@@ -35,7 +35,10 @@ export default function Header() {
         </button>
         {/* Navigation */}
         <nav className="hidden md:flex gap-2 md:gap-6">
-          {navLinks.map(link => (
+          {[...navLinks, ...(user ? [{ name: 'Orders', to: '/orders' }] : []), ...(isAdmin ? [
+            { name: 'Admin', to: '/admin' },
+            { name: 'Admin Orders', to: '/admin-orders' }
+          ] : [])].map(link => (
             <NavLink
               key={link.to}
               to={link.to}
@@ -75,7 +78,6 @@ export default function Header() {
           ) : (
             <div className="flex gap-2">
               <button onClick={loginGoogle} className="px-3 py-1 rounded-full bg-[#bfa76a] text-[#2d1a09] font-semibold shadow hover:bg-[#f5e9c8] transition-all">Login with Google</button>
-              <button onClick={loginFacebook} className="px-3 py-1 rounded-full bg-[#bfa76a] text-[#2d1a09] font-semibold shadow hover:bg-[#f5e9c8] transition-all">Login with Facebook</button>
             </div>
           )}
         </div>
@@ -84,7 +86,10 @@ export default function Header() {
       {menuOpen && (
         <div className="md:hidden bg-[#2d1a09] bg-opacity-95 px-4 pb-4 pt-2 shadow-lg animate-fade-in-down">
           <nav className="flex flex-col gap-2 mb-4">
-            {navLinks.map(link => (
+            {[...navLinks, ...(user ? [{ name: 'Orders', to: '/orders' }] : []), ...(isAdmin ? [
+              { name: 'Admin', to: '/admin' },
+              { name: 'Admin Orders', to: '/admin-orders' }
+            ] : [])].map(link => (
               <NavLink
                 key={link.to}
                 to={link.to}
@@ -121,7 +126,6 @@ export default function Header() {
             ) : (
               <div className="flex flex-col gap-2 mt-2 w-full">
                 <button onClick={() => { setMenuOpen(false); loginGoogle(); }} className="px-3 py-1 rounded-full bg-[#bfa76a] text-[#2d1a09] font-semibold shadow hover:bg-[#f5e9c8] transition-all w-full">Login with Google</button>
-                <button onClick={() => { setMenuOpen(false); loginFacebook(); }} className="px-3 py-1 rounded-full bg-[#bfa76a] text-[#2d1a09] font-semibold shadow hover:bg-[#f5e9c8] transition-all w-full">Login with Facebook</button>
               </div>
             )}
           </div>

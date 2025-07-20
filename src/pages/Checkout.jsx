@@ -1,21 +1,41 @@
 import { useCart } from '../components/CartContext';
 import { useState } from 'react';
+import { useAuth } from '../components/AuthContext';
+import { Navigate } from 'react-router-dom';
+import { supabase } from '../supabaseClient';
 
 export default function Checkout() {
+  const { user } = useAuth();
   const { cart, clearCart } = useCart();
   const [form, setForm] = useState({ name: '', email: '', address: '' });
   const [submitted, setSubmitted] = useState(false);
   const total = cart.reduce((sum, item) => sum + item.price * (item.qty || 1), 0);
 
+  if (!user) return <Navigate to="/" />;
+
   const handleChange = e => {
     setForm(f => ({ ...f, [e.target.name]: e.target.value }));
   };
 
-  const handleSubmit = e => {
+  const handleSubmit = async e => {
     e.preventDefault();
-    // Here you would call your backend to create a Stripe Checkout session
-    setSubmitted(true);
-    clearCart();
+    // Save order to Supabase
+    const order = {
+      user_id: user?.uid || user?.email,
+      name: form.name,
+      email: form.email,
+      address: form.address,
+      items: cart,
+      total,
+      created_at: new Date().toISOString(),
+    };
+    const { error } = await supabase.from('orders').insert([order]);
+    if (!error) {
+      setSubmitted(true);
+      clearCart();
+    } else {
+      alert('Order failed to save. Please try again.');
+    }
   };
 
   if (submitted) {

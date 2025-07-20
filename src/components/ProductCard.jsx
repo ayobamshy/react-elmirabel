@@ -21,18 +21,18 @@ export default function ProductCard({ product }) {
       )}
       <div className="aspect-w-1 aspect-h-1 w-full flex items-center justify-center overflow-hidden bg-[#f5e9c8]">
         <img
-          src={product.image}
+          src={product.image || '/images/placeholder.png'}
           alt={product.name}
           className="object-cover w-full h-full max-w-[220px] max-h-[220px] rounded-2xl mx-auto"
           loading="lazy"
+          onError={e => { e.target.onerror = null; e.target.src = '/images/placeholder.png'; }}
         />
       </div>
       <div className="p-4 sm:p-5 flex flex-col flex-1">
         <h3 className="font-bold text-lg sm:text-xl text-[#2d1a09] mb-1">{product.name}</h3>
         <p className="text-[#4b320d]/80 text-sm sm:text-base mb-2 flex-1">{product.description}</p>
         <div className="flex flex-col xs:flex-row items-stretch xs:items-center justify-between mt-2 gap-2 xs:gap-2">
-          <span className="font-semibold text-[#bfa76a] text-lg sm:text-xl">
-6{product.price.toLocaleString()}</span>
+          <span className="font-semibold text-[#bfa76a] text-lg sm:text-xl">₦{product.price.toLocaleString()}</span>
           <input
             type="number"
             min={1}
