@@ -1,4 +1,5 @@
 import { createContext, useContext, useEffect, useState } from 'react';
+import { useAuth } from './AuthContext';
 
 const CartContext = createContext();
 
@@ -7,10 +8,27 @@ export function CartProvider({ children }) {
     const stored = localStorage.getItem('cart');
     return stored ? JSON.parse(stored) : [];
   });
+  const { user } = useAuth ? useAuth() : { user: null };
 
+  // Save cart to generic key
   useEffect(() => {
     localStorage.setItem('cart', JSON.stringify(cart));
   }, [cart]);
+
+  // Save cart to user-specific key
+  const saveCartForUser = (userKey) => {
+    if (userKey) {
+      localStorage.setItem(`cart_${userKey}`, JSON.stringify(cart));
+    }
+  };
+
+  // Load cart from user-specific key
+  const loadCartForUser = (userKey) => {
+    if (userKey) {
+      const stored = localStorage.getItem(`cart_${userKey}`);
+      if (stored) setCart(JSON.parse(stored));
+    }
+  };
 
   const addToCart = (product, qty = 1) => {
     setCart(prev => {
@@ -34,8 +52,22 @@ export function CartProvider({ children }) {
 
   const clearCart = () => setCart([]);
 
+  // Guest cart refresh warning
+  useEffect(() => {
+    if (!user && cart.length > 0) {
+      const handleBeforeUnload = (e) => {
+        e.preventDefault();
+        e.returnValue = '';
+      };
+      window.addEventListener('beforeunload', handleBeforeUnload);
+      return () => {
+        window.removeEventListener('beforeunload', handleBeforeUnload);
+      };
+    }
+  }, [user, cart]);
+
   return (
-    <CartContext.Provider value={{ cart, addToCart, removeFromCart, updateQty, clearCart }}>
+    <CartContext.Provider value={{ cart, setCart, addToCart, removeFromCart, updateQty, clearCart, saveCartForUser, loadCartForUser }}>
       {children}
     </CartContext.Provider>
   );
