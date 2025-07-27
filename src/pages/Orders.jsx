@@ -4,7 +4,7 @@ import { supabase } from '../supabaseClient';
 import { Navigate } from 'react-router-dom';
 
 export default function Orders() {
-  const { user } = useAuth();
+  const { user, authLoading } = useAuth();
   const [orders, setOrders] = useState([]);
   const [loading, setLoading] = useState(true);
 
@@ -22,6 +22,12 @@ export default function Orders() {
     };
     fetchOrders();
   }, [user]);
+
+  useEffect(() => {
+    if (!authLoading && user) {
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+    }
+  }, [authLoading, user]);
 
   if (!user) return <Navigate to="/" />;
 

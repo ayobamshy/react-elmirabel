@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 
 export default function Contact() {
   const [form, setForm] = useState({ name: '', email: '', message: '' });
@@ -12,6 +12,13 @@ export default function Contact() {
     // Here you would send the email via EmailJS or similar
     setSubmitted(true);
   };
+
+  useEffect(() => {
+    const timeout = setTimeout(() => {
+      window.scrollTo({ top: 0, left: 0, behavior: 'auto' });
+    }, 100);
+    return () => clearTimeout(timeout);
+  }, []);
 
   if (submitted) {
     return (

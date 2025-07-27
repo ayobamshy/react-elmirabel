@@ -11,7 +11,7 @@ const SORT_FIELDS = [
 ];
 
 export default function AdminOrders() {
-  const { user, isAdmin } = useAuth();
+  const { user, isAdmin, authLoading } = useAuth();
   const [orders, setOrders] = useState([]);
   const [loading, setLoading] = useState(true);
   const [filter, setFilter] = useState('');
@@ -41,6 +41,13 @@ export default function AdminOrders() {
     fetchOrders();
   }, [user, isAdmin, filter, sortField, sortDir, page, pageSize]);
 
+  useEffect(() => {
+    if (!authLoading && user && isAdmin) {
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+    }
+  }, [authLoading, user, isAdmin]);
+
+  if (authLoading) return <div className="text-center py-20 text-[#bfa76a]">Loading...</div>;
   if (!user || !isAdmin) return <Navigate to="/" />;
 
   const totalPages = Math.ceil(totalCount / pageSize);

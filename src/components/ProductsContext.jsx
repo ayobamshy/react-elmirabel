@@ -27,16 +27,19 @@ export function useProducts() {
 }
 
 export async function addProduct(product, refresh) {
-  await supabase.from('products').insert([product]);
+  const { data, error } = await supabase.from('products').insert([product]).select();
   if (refresh) await refresh();
+  return { data, error };
 }
 
 export async function updateProduct(id, updatedProduct, refresh) {
-  await supabase.from('products').update(updatedProduct).eq('id', id);
+  const { data, error } = await supabase.from('products').update(updatedProduct).eq('id', id).select();
   if (refresh) await refresh();
+  return { data, error };
 }
 
 export async function deleteProduct(id, refresh) {
-  await supabase.from('products').delete().eq('id', id);
+  const { data, error } = await supabase.from('products').delete().eq('id', id);
   if (refresh) await refresh();
+  return { data, error };
 }
