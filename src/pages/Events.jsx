@@ -5,6 +5,12 @@ export default function Events() {
   useEffect(() => {
     import('../data/events.json').then(mod => setEvents(mod.default || mod));
   }, []);
+  useEffect(() => {
+    const timeout = setTimeout(() => {
+      window.scrollTo({ top: 0, left: 0, behavior: 'auto' });
+    }, 100);
+    return () => clearTimeout(timeout);
+  }, []);
   return (
     <div className="max-w-7xl mx-auto px-4 py-12">
       <h1 className="text-4xl font-extrabold text-[#bfa76a] mb-10 text-center font-serif tracking-widest drop-shadow">Upcoming Events</h1>

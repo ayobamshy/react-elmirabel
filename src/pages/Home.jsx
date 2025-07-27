@@ -1,6 +1,7 @@
 import { useEffect, useState } from 'react';
 import ProductCard from '../components/ProductCard';
 import { useProducts } from '../components/ProductsContext';
+import { Link } from 'react-router-dom';
 
 const testimonials = [
   {
@@ -24,13 +25,20 @@ export default function Home() {
     import('../data/events.json').then(mod => setEvents(mod.default || mod));
   }, []);
 
+  useEffect(() => {
+    const timeout = setTimeout(() => {
+      window.scrollTo({ top: 0, left: 0, behavior: 'auto' });
+    }, 100);
+    return () => clearTimeout(timeout);
+  }, []);
+
   const upcoming = events.slice(0, 2);
   const featuredWines = products.filter(p => {
     if (typeof p.featured === 'boolean') return p.featured;
     if (typeof p.featured === 'string') return p.featured.toLowerCase() === 'true';
     if (typeof p.featured === 'number') return p.featured === 1;
     return false;
-  });
+  }).slice(0, 3);
 
   return (
     <div className="bg-[#f8f5ef]">
@@ -55,7 +63,7 @@ export default function Home() {
         <h2 className="text-xl sm:text-2xl font-serif font-bold text-[#bfa76a] mb-6 sm:mb-8 text-center">Featured Wines</h2>
         <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6 sm:gap-8">
           {featuredWines.map(product => (
-            <ProductCard key={product.id} product={product} />
+            <ProductCard key={product.id} product={product} imageLinkTo={`/catalog#product-${product.id}`} />
           ))}
         </div>
       </section>

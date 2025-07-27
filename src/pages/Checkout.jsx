@@ -1,6 +1,6 @@
 import { useCart } from '../components/CartContext';
 import { useState } from 'react';
-import { useAuth } from '../components/AuthContext';
+import { useAuth, deleteCartFromSupabase } from '../components/AuthContext';
 import { Navigate } from 'react-router-dom';
 import { supabase } from '../supabaseClient';
 
@@ -31,6 +31,10 @@ export default function Checkout() {
     };
     const { error } = await supabase.from('orders').insert([order]);
     if (!error) {
+      // Delete cart from Supabase after successful order
+      if (user && cart.length > 0) {
+        await deleteCartFromSupabase(user.uid);
+      }
       setSubmitted(true);
       clearCart();
     } else {

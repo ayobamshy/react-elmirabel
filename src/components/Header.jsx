@@ -1,5 +1,5 @@
 import { Link, NavLink } from 'react-router-dom';
-import { useState } from 'react';
+import { useState, useRef } from 'react';
 import { useAuth } from './AuthContext';
 import { useCart } from './CartContext';
 
@@ -15,6 +15,9 @@ export default function Header() {
   const { cart } = useCart();
   const cartCount = cart.reduce((sum, item) => sum + item.qty, 0);
   const [menuOpen, setMenuOpen] = useState(false);
+  const [adminDropdownOpen, setAdminDropdownOpen] = useState(false);
+  const adminDropdownTimeout = useRef();
+  const [adminDropdownMobile, setAdminDropdownMobile] = useState(false);
   return (
     <header className="w-full bg-gradient-to-r from-[#2d1a09] via-[#4b320d] to-[#bfa76a] shadow-xl sticky top-0 z-50">
       <div className="max-w-7xl mx-auto flex items-center justify-between px-4 py-4">
@@ -34,11 +37,9 @@ export default function Header() {
           </svg>
         </button>
         {/* Navigation */}
+        {/* Desktop nav: Admin dropdown for admins */}
         <nav className="hidden md:flex gap-2 md:gap-6">
-          {[...navLinks, ...(user ? [{ name: 'Orders', to: '/orders' }] : []), ...(isAdmin ? [
-            { name: 'Admin', to: '/admin' },
-            { name: 'Admin Orders', to: '/admin-orders' }
-          ] : [])].map(link => (
+          {[...navLinks, ...(user ? [{ name: 'Orders', to: '/orders' }] : [])].map(link => (
             <NavLink
               key={link.to}
               to={link.to}
@@ -53,6 +54,37 @@ export default function Header() {
               {link.name}
             </NavLink>
           ))}
+          {isAdmin && (
+            <div className="relative"
+              onMouseEnter={() => {
+                clearTimeout(adminDropdownTimeout.current);
+                setAdminDropdownOpen(true);
+              }}
+              onMouseLeave={() => {
+                adminDropdownTimeout.current = setTimeout(() => setAdminDropdownOpen(false), 200);
+              }}
+            >
+              <button className="px-4 py-2 rounded-full font-medium text-base transition-all duration-200 tracking-wide text-[#f5e9c8] hover:bg-[#bfa76a]/20 hover:text-[#bfa76a] flex items-center gap-1">
+                Admin
+                <svg className="w-4 h-4" fill="none" stroke="currentColor" strokeWidth={2} viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" d="M19 9l-7 7-7-7" /></svg>
+              </button>
+              {adminDropdownOpen && (
+                <div className="absolute left-0 mt-2 w-48 bg-white rounded-xl shadow-lg border border-[#bfa76a]/30 z-50"
+                  onMouseEnter={() => {
+                    clearTimeout(adminDropdownTimeout.current);
+                    setAdminDropdownOpen(true);
+                  }}
+                  onMouseLeave={() => {
+                    adminDropdownTimeout.current = setTimeout(() => setAdminDropdownOpen(false), 200);
+                  }}
+                >
+                  <NavLink to="/admin/products" className={({ isActive }) => `block px-4 py-2 text-[#2d1a09] hover:bg-[#f5e9c8] rounded-t-xl ${isActive ? 'bg-[#bfa76a]/20' : ''}`}>Products</NavLink>
+                  <NavLink to="/admin/events" className={({ isActive }) => `block px-4 py-2 text-[#2d1a09] hover:bg-[#f5e9c8] ${isActive ? 'bg-[#bfa76a]/20' : ''}`}>Events</NavLink>
+                  <NavLink to="/admin/orders" className={({ isActive }) => `block px-4 py-2 text-[#2d1a09] hover:bg-[#f5e9c8] rounded-b-xl ${isActive ? 'bg-[#bfa76a]/20' : ''}`}>Orders</NavLink>
+                </div>
+              )}
+            </div>
+          )}
         </nav>
         {/* Actions */}
         <div className="hidden md:flex items-center gap-4">
@@ -85,11 +117,9 @@ export default function Header() {
       {/* Mobile menu dropdown */}
       {menuOpen && (
         <div className="md:hidden bg-[#2d1a09] bg-opacity-95 px-4 pb-4 pt-2 shadow-lg animate-fade-in-down">
+          {/* Mobile nav: Admin dropdown for admins */}
           <nav className="flex flex-col gap-2 mb-4">
-            {[...navLinks, ...(user ? [{ name: 'Orders', to: '/orders' }] : []), ...(isAdmin ? [
-              { name: 'Admin', to: '/admin' },
-              { name: 'Admin Orders', to: '/admin-orders' }
-            ] : [])].map(link => (
+            {[...navLinks, ...(user ? [{ name: 'Orders', to: '/orders' }] : [])].map(link => (
               <NavLink
                 key={link.to}
                 to={link.to}
@@ -104,6 +134,20 @@ export default function Header() {
                 {link.name}
               </NavLink>
             ))}
+            {isAdmin && (
+              <div className="relative">
+                <button className="block w-full text-left px-4 py-2 rounded-full font-medium text-base transition-all duration-200 tracking-wide text-[#f5e9c8] hover:bg-[#bfa76a]/20 hover:text-[#bfa76a]" onClick={() => setAdminDropdownMobile(m => !m)}>
+                  Admin ▼
+                </button>
+                {adminDropdownMobile && (
+                  <div className="ml-4 mt-1 bg-white rounded-xl shadow-lg border border-[#bfa76a]/30 z-50">
+                    <NavLink to="/admin/products" className={({ isActive }) => `block px-4 py-2 text-[#2d1a09] hover:bg-[#f5e9c8] rounded-t-xl ${isActive ? 'bg-[#bfa76a]/20' : ''}`} onClick={() => setMenuOpen(false)}>Products</NavLink>
+                    <NavLink to="/admin/events" className={({ isActive }) => `block px-4 py-2 text-[#2d1a09] hover:bg-[#f5e9c8] ${isActive ? 'bg-[#bfa76a]/20' : ''}`} onClick={() => setMenuOpen(false)}>Events</NavLink>
+                    <NavLink to="/admin/orders" className={({ isActive }) => `block px-4 py-2 text-[#2d1a09] hover:bg-[#f5e9c8] rounded-b-xl ${isActive ? 'bg-[#bfa76a]/20' : ''}`} onClick={() => setMenuOpen(false)}>Orders</NavLink>
+                  </div>
+                )}
+              </div>
+            )}
           </nav>
           <div className="flex flex-col gap-2 items-start">
             <Link to="/cart" className="relative group w-full" onClick={() => setMenuOpen(false)}>

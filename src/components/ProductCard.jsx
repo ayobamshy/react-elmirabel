@@ -1,7 +1,8 @@
 import { useCart } from './CartContext';
 import { useState } from 'react';
+import { Link } from 'react-router-dom';
 
-export default function ProductCard({ product }) {
+export default function ProductCard({ product, imageLinkTo }) {
   const { addToCart } = useCart();
   const [qty, setQty] = useState(1);
   const [showMsg, setShowMsg] = useState(false);
@@ -20,13 +21,25 @@ export default function ProductCard({ product }) {
         </div>
       )}
       <div className="aspect-w-1 aspect-h-1 w-full flex items-center justify-center overflow-hidden bg-[#f5e9c8]">
-        <img
-          src={product.image || '/images/placeholder.png'}
-          alt={product.name}
-          className="object-cover w-full h-full max-w-[220px] max-h-[220px] rounded-2xl mx-auto"
-          loading="lazy"
-          onError={e => { e.target.onerror = null; e.target.src = '/images/placeholder.png'; }}
-        />
+        {imageLinkTo ? (
+          <Link to={imageLinkTo} tabIndex={0} aria-label={`View ${product.name} in catalog`} style={{ display: 'block', width: '100%', height: '100%' }}>
+            <img
+              src={product.image || '/images/placeholder.png'}
+              alt={product.name}
+              className="object-cover w-full h-full max-w-[220px] max-h-[220px] rounded-2xl mx-auto cursor-pointer hover:opacity-80 transition"
+              loading="lazy"
+              onError={e => { e.target.onerror = null; e.target.src = '/images/placeholder.png'; }}
+            />
+          </Link>
+        ) : (
+          <img
+            src={product.image || '/images/placeholder.png'}
+            alt={product.name}
+            className="object-cover w-full h-full max-w-[220px] max-h-[220px] rounded-2xl mx-auto"
+            loading="lazy"
+            onError={e => { e.target.onerror = null; e.target.src = '/images/placeholder.png'; }}
+          />
+        )}
       </div>
       <div className="p-4 sm:p-5 flex flex-col flex-1">
         <h3 className="font-bold text-lg sm:text-xl text-[#2d1a09] mb-1">{product.name}</h3>
