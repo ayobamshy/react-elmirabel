@@ -7,33 +7,276 @@ A luxury/premium e-commerce wine shop built with React, Tailwind CSS, Firebase A
 ## 🏆 Project Overview
 El-Mirabel Wine Shop is a modern, fully functional e-commerce site for premium wines and exclusive events. It is designed for a luxury experience, with:
 - Beautiful, responsive UI (React + Tailwind CSS)
-- Persistent shopping cart
+- Persistent shopping cart with user-specific sync
 - Social login (Google, Facebook via Firebase)
 - Secure admin panel with backend API for product/event management
-- Stripe-ready checkout
+- Stripe-ready checkout system
 - Supabase database with Row Level Security (RLS)
 - Backend API that bridges Firebase Auth to Supabase operations
-- Contact form and event management
-- Smooth UX with auto-scroll to edit forms
+- **Formspree-powered contact form** (50 free submissions/month)
+- **Authentication-restricted contact form** (email auto-filled from logged-in user)
+- **Admin-only product management** (add/edit/delete wines)
+- **Admin-only event management** (add/edit/delete events)
+- **Order management system** (user orders + admin order dashboard)
+- **Luxury design** with premium branding and responsive layout
 
 ---
 
-## ✨ Features
+## ✨ Current Features
+
+### 🛍️ **E-Commerce Core**
 - **Home, Catalog, Product, Cart, Checkout, Events, Contact pages**
-- **Persistent cart** (localStorage + Supabase sync)
-- **Add-to-cart feedback** (toast notification on product add)
-- **Quantity selection** (choose quantity before adding to cart)
-- **Live cart icon badge** (cart icon in header updates with total items)
-- **Social login** (Google, Facebook via Firebase)
-- **Secure Admin UI** (add/edit/delete products & events with backend API)
-- **Admin-only access** (restricted to specific email addresses)
-- **Smooth edit experience** (auto-scroll to form when editing events)
-- **Stripe-ready checkout** (form, order summary, placeholder for Stripe integration)
-- **Real-time updates** (events list refreshes automatically after changes)
-- **Luxury/premium design** (deep golds, elegant fonts, responsive)
-- **Contact form** (EmailJS placeholder)
-- **Improved homepage** (hero, featured wines, events, testimonials)
-- **Events sync** (homepage and /events page always in sync)
+- **Persistent cart** (localStorage + Supabase sync per user)
+- **Social login** (Google, Facebook via Firebase Auth)
+- **Secure checkout** with order summary and user order history
+- **Product management** (browse, search, filter premium wines)
+- **Event management** (browse exclusive wine events)
+
+### 🔐 **Authentication & Security**
+- **Firebase Authentication** (Google, Facebook login)
+- **User-specific cart sync** (cart persists per logged-in user)
+- **Admin-only access** (restricted to authorized email addresses)
+- **Secure API endpoints** (Firebase Auth + Supabase RLS)
+
+### 🎯 **Contact System**
+- **Authentication-restricted contact form**
+- **Email auto-filled** from logged-in user's account
+- **Formspree integration** (50 free submissions/month)
+- **Real email delivery** to your inbox
+- **Loading states & error handling**
+- **Success confirmation** with retry option
+
+### 🛠️ **Admin Dashboard**
+- **Product Management**
+  - Add new wines with images, descriptions, pricing
+  - Edit existing product details
+  - Delete products from catalog
+  - Featured product toggle
+- **Event Management**
+  - Add exclusive wine events
+  - Edit event details (date, time, description, images)
+  - Delete events
+- **Order Management**
+  - View all customer orders
+  - Order filtering and sorting
+  - Order status tracking
+
+### 📱 **User Experience**
+- **Responsive design** (mobile, tablet, desktop)
+- **Premium branding** (luxury colors, typography)
+- **Smooth animations** and transitions
+- **Loading states** for all async operations
+- **Error handling** with user-friendly messages
+- **Auto-scroll to forms** when editing
+
+---
+
+## 🛠️ Tech Stack
+
+### Frontend
+- **React** (Vite)
+- **Tailwind CSS** (styling)
+- **Firebase Auth** (Google, Facebook login)
+- **React Router** (client-side routing)
+- **React Context API** (state management)
+- **Formspree** (contact form email delivery)
+
+### Backend
+- **Node.js/Express** (Backend API server)
+- **Supabase** (PostgreSQL database with RLS)
+- **Firebase Admin SDK** (authentication verification)
+- **RESTful API** design
+
+### Database
+- **Supabase** (PostgreSQL)
+- **Row Level Security** (RLS) for data protection
+- **User-specific data isolation**
+
+### Deployment & Services
+- **Formspree** (contact form emails - 50 free/month)
+- **Firebase** (authentication & hosting ready)
+- **Vercel/Netlify** ready for deployment
+
+---
+
+## 🚀 Quick Start
+
+### Prerequisites
+- Node.js 16+
+- Firebase project
+- Supabase project
+- Formspree account (for contact form)
+
+### Environment Variables
+Create `.env` file:
+```bash
+VITE_FIREBASE_API_KEY=your_firebase_api_key
+VITE_FIREBASE_AUTH_DOMAIN=your_firebase_auth_domain
+VITE_FIREBASE_PROJECT_ID=your_firebase_project_id
+VITE_FIREBASE_APP_ID=your_firebase_app_id
+VITE_SUPABASE_URL=your_supabase_url
+VITE_SUPABASE_ANON_KEY=your_supabase_anon_key
+```
+
+### Installation
+```bash
+npm install
+npm run dev
+```
+
+### Contact Form Setup
+1. Sign up at [formspree.io](https://formspree.io)
+2. Create a new form
+3. Copy your form endpoint ID
+4. Update `FORMSPREE_URL` in `/src/pages/Contact.jsx`
+
+---
+
+## 📁 Project Structure
+
+```
+src/
+├── components/
+│   ├── AuthContext.jsx        # Firebase auth context
+│   ├── CartContext.jsx        # Shopping cart state
+│   ├── ProductsContext.jsx    # Product management
+│   ├── EventsContext.jsx      # Event management
+│   └── ...
+├── pages/
+│   ├── Home.jsx              # Landing page
+│   ├── Catalog.jsx           # Product catalog
+│   ├── Contact.jsx           # Authentication-restricted contact
+│   ├── Admin.jsx             # Admin dashboard
+│   ├── AdminProducts.jsx     # Product management
+│   ├── AdminEvents.jsx       # Event management
+│   └── ...
+├── data/                     # Sample data
+└── ...
+```
+
+---
+
+## 🎯 Admin Features
+
+### Product Management
+- **Add Products**: Create new wine listings with full details
+- **Edit Products**: Update descriptions, prices, images
+- **Delete Products**: Remove products from catalog
+- **Featured Toggle**: Mark products as featured
+
+### Event Management
+- **Add Events**: Create exclusive wine events
+- **Edit Events**: Update dates, descriptions, images
+- **Delete Events**: Remove events from listings
+
+### Order Management
+- **View All Orders**: Complete order overview
+- **Filter & Sort**: Advanced order filtering
+- **Customer Details**: Full order information
+
+---
+
+## 🔒 Security Features
+
+### Authentication
+- **Firebase Auth** integration
+- **Social login** (Google, Facebook)
+- **Admin email verification**
+- **Route protection** for admin pages
+
+### Data Protection
+- **Supabase RLS** (Row Level Security)
+- **User-specific data isolation**
+- **Secure API endpoints**
+- **Input validation & sanitization**
+
+---
+
+## 📞 Contact Features
+
+### Authentication-Required Contact
+- **Logged-in users only** can send messages
+- **Email auto-filled** from user account
+- **Non-editable email field**
+- **Formspree integration** for reliable email delivery
+- **Professional error handling**
+- **Success confirmation** with retry option
+
+### Alternative Contact Methods
+- **Email**: info@elmirabel.com
+- **Phone**: +234 800 123 4567
+- **Address**: Lagos, Nigeria
+
+---
+
+## 🎨 Design System
+
+### Colors
+- **Primary**: `#bfa76a` (luxury gold)
+- **Secondary**: `#2d1a09` (deep brown)
+- **Accent**: `#f5e9c8` (warm cream)
+
+### Typography
+- **Serif fonts** for luxury feel
+- **Responsive typography** scales
+- **Premium spacing** and layouts
+
+---
+
+## 🧪 Testing
+
+### Manual Testing Checklist
+- [ ] User registration/login (Google/Facebook)
+- [ ] Cart functionality across sessions
+- [ ] Product browsing and filtering
+- [ ] Contact form submission
+- [ ] Admin product management
+- [ ] Admin event management
+- [ ] Order placement and viewing
+- [ ] Responsive design on mobile/tablet
+
+### Contact Form Testing
+- [ ] Form submission with logged-in user
+- [ ] Email delivery confirmation
+- [ ] Error handling scenarios
+- [ ] Success message display
+- [ ] Non-logged-in user restriction
+
+---
+
+## 🚀 Deployment Ready
+
+### Ready for Production
+- **Environment variables** configured
+- **Build optimization** complete
+- **Error handling** implemented
+- **Performance optimized**
+- **Security best practices** applied
+
+### Deployment Options
+- **Vercel**: One-click deployment
+- **Netlify**: Static hosting with functions
+- **Firebase Hosting**: Full Firebase ecosystem
+- **Custom server**: Express backend ready
+
+---
+
+## 🆘 Support
+
+### Common Issues
+- **Contact form not working**: Check Formspree form ID
+- **Authentication errors**: Verify Firebase config
+- **Database issues**: Check Supabase connection
+- **Build failures**: Verify environment variables
+
+### Contact for Help
+- **Email**: info@elmirabel.com
+- **GitHub Issues**: Create issue in repository
+- **Documentation**: Check inline code comments
+
+---
+
+**Built with ❤️ for premium wine enthusiasts**
 
 ---
 
