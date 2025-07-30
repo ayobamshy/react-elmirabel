@@ -27,3 +27,9 @@ dist-ssr
 .env
 public/products-*.csv
 public/images/
+
+
+# LLM Folders and Files
+CONTACT_SETUP.md
+GEMINI.md
+settings.json
