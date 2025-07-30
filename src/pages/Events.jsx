@@ -1,9 +1,17 @@
 import { useEffect, useState } from 'react';
+import { supabase } from '../supabaseClient';
 
 export default function Events() {
   const [events, setEvents] = useState([]);
   useEffect(() => {
-    import('../data/events.json').then(mod => setEvents(mod.default || mod));
+    async function fetchEvents() {
+      const { data, error } = await supabase
+        .from('events')
+        .select('*')
+        .order('date', { ascending: true });
+      setEvents(data || []);
+    }
+    fetchEvents();
   }, []);
   useEffect(() => {
     const timeout = setTimeout(() => {
