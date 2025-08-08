@@ -17,7 +17,7 @@ El-Mirabel Wine Shop is a modern, fully functional e-commerce site for premium w
 - **Authentication-restricted contact form** (email auto-filled from logged-in user)
 - **Admin-only product management** (add/edit/delete wines)
 - **Admin-only event management** (add/edit/delete events)
-- **Order management system** (user orders + admin order dashboard)
+- **Order management (planned)**
 - **Luxury design** with premium branding and responsive layout
 
 ---
@@ -56,10 +56,10 @@ El-Mirabel Wine Shop is a modern, fully functional e-commerce site for premium w
   - Add exclusive wine events
   - Edit event details (date, time, description, images)
   - Delete events
-- **Order Management**
-  - View all customer orders
-  - Order filtering and sorting
-  - Order status tracking
+- **Order Management (planned)**
+  - View customer orders (planned)
+  - Filter and sort orders (planned)
+  - Track order status (planned)
 
 ### 📱 **User Experience**
 - **Responsive design** (mobile, tablet, desktop)
@@ -102,7 +102,7 @@ El-Mirabel Wine Shop is a modern, fully functional e-commerce site for premium w
 ## 🚀 Quick Start
 
 ### Prerequisites
-- Node.js 16+
+- Node.js 18+ (backend requires >= 18)
 - Firebase project
 - Supabase project
 - Formspree account (for contact form)
@@ -169,7 +169,7 @@ src/
 - **Edit Events**: Update dates, descriptions, images
 - **Delete Events**: Remove events from listings
 
-### Order Management
+### Order Management (planned)
 - **View All Orders**: Complete order overview
 - **Filter & Sort**: Advanced order filtering
 - **Customer Details**: Full order information
@@ -295,8 +295,8 @@ src/
 - **Firebase Admin SDK** (Server-side token verification)
 
 ### Integrations
-- **@stripe/stripe-js** (for Stripe Checkout integration)
-- **EmailJS** (for contact form, placeholder)
+- **@stripe/stripe-js** (for Stripe Checkout integration; wiring pending)
+- **Formspree** (live contact form delivery)
 
 ---
 
@@ -366,6 +366,30 @@ CREATE POLICY "Allow authenticated access" ON events
 FOR ALL USING (auth.role() = 'authenticated');
 ```
 
+**Carts Table:**
+```sql
+CREATE TABLE carts (
+  user_id TEXT PRIMARY KEY,
+  cart JSONB NOT NULL DEFAULT '[]'::jsonb,
+  updated_at TIMESTAMP WITH TIME ZONE DEFAULT NOW()
+);
+
+-- Optional RLS (backend uses Service Role for admin ops)
+ALTER TABLE carts ENABLE ROW LEVEL SECURITY;
+CREATE POLICY "Allow authenticated read own cart" ON carts
+  FOR SELECT USING (auth.email() = user_id);
+CREATE POLICY "Allow authenticated upsert own cart" ON carts
+  FOR INSERT WITH CHECK (auth.email() = user_id);
+CREATE POLICY "Allow authenticated update own cart" ON carts
+  FOR UPDATE USING (auth.email() = user_id);
+```
+
+Utilities in this repo:
+- `POPULATE_EVENTS.sql` to seed example events
+- `ADD_FEATURED_COLUMN_EVENTS.sql` to add featured flag
+- `SUPABASE_UPDATE_EVENTS.sql` example updates
+- `update-events.js` script to update event images via Supabase JS client
+
 ### 4. **Start the Application**
 
 **Start Backend Server:**
@@ -379,7 +403,27 @@ npm start
 npm run dev
 ```
 
-The frontend will be available at `http://localhost:5174` and the backend API at `http://localhost:3001`.
+ The frontend will be available at `http://localhost:5173` and the backend API at `http://localhost:3001`.
+
+ Note on local API calls: the frontend calls the backend using relative paths like `/api/...`. In development, either run the backend on the same origin (via a reverse proxy) or configure a Vite dev proxy:
+
+ ```js
+ // vite.config.js
+ import { defineConfig } from 'vite'
+ import react from '@vitejs/plugin-react'
+ 
+ export default defineConfig({
+   plugins: [react()],
+   server: {
+     proxy: {
+       '/api': {
+         target: 'http://localhost:3001',
+         changeOrigin: true,
+       },
+     },
+   },
+ })
+ ```
 
 ---
 
@@ -522,22 +566,19 @@ The application includes comprehensive error handling:
 
 ## 🚨 Known Limitations
 
-1. **Supabase Custom OIDC**: Direct Firebase Auth to Supabase bridging is not available on free/standard Supabase plans, which is why we use a backend API proxy.
-2. **Admin Email Configuration**: Admin email addresses are hardcoded in `AuthContext.jsx` and should be moved to environment variables for better security.
-3. **Cart Persistence**: Cart data is stored in localStorage and synced with Supabase, but the backend implementation for cart management is not fully implemented.
+1. Supabase direct OIDC: We bridge Firebase→Supabase via the backend (Firebase Admin + Supabase Service Role). Direct OIDC isn’t used here.
+2. Admin email source: Backend checks `ADMIN_EMAIL` in `server/.env`. Frontend may also gate UI in `AuthContext.jsx`; keep both in sync.
+3. Orders & Stripe: Order management and Stripe checkout are planned but not yet completed.
 
 ---
 
 ## 📈 Next Steps
 
-1. **Implement Product Management**: Add product CRUD operations following the same secure backend API pattern
-2. **Enhance Admin UI**: Add more comprehensive admin features and better error handling
-3. **Complete Cart Implementation**: Fully implement cart persistence with Supabase
-4. **Add Order Management**: Create order management system for admin users
-5. **Implement Stripe Integration**: Complete the Stripe checkout integration
-6. **Add Unit Tests**: Implement comprehensive testing for both frontend and backend
-7. **Improve Documentation**: Add API documentation and user guides
-8. **Optimize Performance**: Implement caching and other performance optimizations
+1. Order Management: Build orders schema and admin dashboard.
+2. Stripe Integration: Implement server checkout session + client flow.
+3. Tests: Add unit/integration tests for backend routes and contexts.
+4. Docs: Expand API and environment setup guides.
+5. Performance: Add caching and tune queries.
 
 ---
 
@@ -550,79 +591,63 @@ For questions or issues, please contact the development team or refer to the Fir
 - Supabase operations use Service Role key with proper access control
 
 ---
-```
+## 🧰 Beginner Glossary (Plain English)
 
-### 2. **Start the dev server**
-```bash
-npm run dev
-```
-
-### 3. **Configure Firebase Auth**
-- Create a Firebase project at https://console.firebase.google.com/
-- Enable Google and Facebook authentication
-- Replace the `firebaseConfig` in `src/components/AuthContext.jsx` with your own keys
-
-### 4. **Configure Supabase**
-- Create a Supabase project at https://app.supabase.com/
-- Go to Project Settings > API to get your `SUPABASE_URL` and `SUPABASE_ANON_KEY`.
-- Add these to your `.env` file:
-  ```env
-  VITE_SUPABASE_URL=your_supabase_url
-  VITE_SUPABASE_ANON_KEY=your_supabase_anon_key
-  ```
-- Supabase is used for products, events, orders, cart, and bridging authentication with Firebase. Make sure your Supabase tables are set up as needed (see code for schema examples).
-
-### 5. **(Optional) Configure Stripe**
-- Set up a Stripe account at https://dashboard.stripe.com/
-- Integrate Stripe Checkout (see TODOs below)
-
-### 6. **(Optional) Configure EmailJS**
-- Set up an EmailJS account at https://www.emailjs.com/
-- Integrate with the contact form (see TODOs below)
+- React: A way to build web pages using small reusable pieces called components.
+- Vite: A fast tool that runs and builds the React app while you code.
+- Tailwind CSS: Ready‑made CSS classes so you can style pages without writing lots of custom CSS.
+- Firebase Authentication: Lets users sign in (e.g., Google). After login, you get a secure token.
+- Firebase ID Token: A signed "proof of login" string your app sends to the backend to prove who you are.
+- Express (Node.js): The backend server that receives requests from the website.
+- Supabase: A hosted PostgreSQL database with helpful tooling and a JS client.
+- Service Role Key: A powerful secret key for the backend only; it can bypass security rules. Never expose it to the frontend.
+- Row Level Security (RLS): Database rules that decide which rows a user can read or change.
+- REST API: A standard way for the frontend to talk to the backend using HTTP routes like GET/POST/PUT/DELETE.
+- Proxy (/api): During development, Vite forwards calls like /api/... to the backend on port 3001.
+- CORS: Browser safety rules about which websites can call your server.
+- CRUD: Create, Read, Update, Delete – add, view, edit, and remove data.
+- Context API: A React feature to share data (like events or cart) across many components.
+- .env file: A file that stores your keys/secrets locally (not checked into GitHub).
+- JSON: A simple text format for data like { "name": "value" }.
 
 ---
 
-## 🌐 Deployment
-- **Vercel** is recommended for free, fast, and easy deployment.
-- Connect your GitHub repo to Vercel and follow the prompts.
-- No special build settings are required (Vite default is fine).
+## ✅ Setup Summary (Step‑by‑step)
+
+1) Install Node.js 18+.
+2) Install dependencies
+   - Frontend (root): `npm install`
+   - Backend (`server/`): `npm install`
+3) Environment variables
+   - Frontend `.env`: Firebase + Supabase anon keys (see sections above)
+   - Backend `server/.env`: `SUPABASE_URL`, `SUPABASE_SERVICE_ROLE_KEY`, `FIREBASE_PROJECT_ID`, `ADMIN_EMAIL`, `PORT=3001`
+4) Database
+   - Create `events` and `carts` tables (see examples above)
+5) Run
+   - Backend: `cd server && npm run dev` (or `npm start`)
+   - Frontend: from project root `npm run dev`
+   - Open http://localhost:5173
+6) Admin access
+   - Log in with the email set in `ADMIN_EMAIL` to use admin pages
+7) Contact form
+   - Replace `FORMSPREE_URL` in `src/pages/Contact.jsx` with your Formspree endpoint
 
 ---
 
-## 🔥 TODOs for Production Readiness
+## 🧩 Troubleshooting
 
-- [ ] **Persist admin changes**: Save products/events to a backend or cloud DB (currently in-memory only)
-- [ ] **Stripe integration**: Implement real Stripe Checkout (create session on backend/serverless function)
-- [ ] **EmailJS integration**: Connect contact form to EmailJS or another email service
-- [ ] **Admin access control**: Restrict admin page to specific emails or roles
-- [ ] **Image hosting**: Use a CDN or cloud storage for product/event images
-- [ ] **Validation & error handling**: Add robust form validation and error messages
-- [ ] **Event RSVP/booking**: Allow users to RSVP or book events
-- [ ] **Accessibility & SEO**: Audit and improve for accessibility and search engines
-- [ ] **Testing**: Add unit and integration tests
-- [ ] **Performance optimization**: Audit bundle size, lazy load images/components
-- [ ] **Analytics**: Add Google Analytics or similar
-- [ ] **Legal**: Add privacy policy, terms, and cookie consent if needed
+- Frontend can’t reach API: Ensure backend runs on port 3001. Check `vite.config.js` proxy for `/api`.
+- 401/403 errors: Make sure you’re logged in and your email matches `ADMIN_EMAIL` in `server/.env`.
+- 500 errors: Inspect backend logs in the terminal where `server` runs. Verify all backend env vars.
+- Invalid JSON errors: We added checks in `EventsContext.jsx` and `CartSupabaseSync.jsx`; if seen, review server responses.
+- Contact form fails: Update your Formspree endpoint and verify your Formspree project.
 
 ---
 
-## 📂 Project Structure
-
-```
-src/
-  components/      # Header, Footer, AuthContext, CartContext, ProductCard, etc.
-  pages/           # Home, Catalog, Product, Cart, Checkout, Events, Contact, Admin
-  data/            # products.json, events.json
-  index.css        # Tailwind base
-  App.jsx          # Main app with routing
-```
-
----
-
-## 📝 Notes
-- All product/event changes via admin are in-memory (reset on reload)
+## 📈 Notes
+- Admin changes to products/events are persisted to Supabase
 - Social login works out of the box with your Firebase config
-- Stripe and EmailJS are ready for integration (see TODOs)
+- Stripe integration is planned
 - The design is fully responsive and optimized for a luxury experience
 - Add-to-cart feedback and live cart badge for a modern, user-friendly experience
 - Homepage and events always in sync for a lively, up-to-date feel
@@ -631,7 +656,6 @@ src/
 
 ## 💡 Contributing
 Pull requests and suggestions are welcome!
-
 ---
 
 ## © 2025 El-Mirabel Wine Shop

@@ -25,9 +25,21 @@ dist-ssr
 
 
 .env
-public/products-*.csv
-public/images/
+.env.local
+.env.*.local
+server/.env
+server/.env.local
+server/.env.*
 
+# Local AI/editor artifacts and notes
+.codeium/
+.windsurf/
+.cursor/
+.idea/
+.vscode/
+!.vscode/extensions.json
+**/brain/**
+**/plan.md
 
 # LLM Folders and Files
 CONTACT_SETUP.md

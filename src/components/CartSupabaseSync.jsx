@@ -1,13 +1,61 @@
 import { useEffect, useRef } from 'react';
 import { useAuth } from './AuthContext';
 import { useCart } from './CartContext';
-import { supabase } from '../supabaseClient';
 import { useLocation } from 'react-router-dom';
 
-// Helper to delete cart from Supabase
-export async function deleteCartFromSupabase(userId) {
-  await supabase.from('carts').delete().eq('user_id', userId);
+// Helper to call backend API for cart operations
+async function getIdToken(user) {
+  if (!user) throw new Error('User not authenticated');
+  return await user.getIdToken();
 }
+
+async function fetchCart(user) {
+  const idToken = await getIdToken(user);
+  const res = await fetch(`/api/carts/${user.uid}`, {
+    headers: { Authorization: `Bearer ${idToken}` }
+  });
+  if (!res.ok) {
+    const text = await res.text();
+    throw new Error(text || `HTTP ${res.status}`);
+  }
+  let payload;
+  try {
+    payload = await res.json();
+  } catch (e) {
+    throw new Error('Invalid JSON from /api/carts');
+  }
+  const { data } = payload || {};
+  return data ? data.cart : null;
+}
+
+async function upsertCart(userId, cart, user) {
+  const idToken = await getIdToken(user);
+  const res = await fetch(`/api/carts/${userId}`, {
+    method: 'POST',
+    headers: {
+      Authorization: `Bearer ${idToken}`,
+      'Content-Type': 'application/json',
+    },
+    body: JSON.stringify({ cart })
+  });
+  if (!res.ok) {
+    const text = await res.text();
+    throw new Error(text || `HTTP ${res.status}`);
+  }
+}
+
+async function deleteCart(userId, user) {
+  const idToken = await getIdToken(user);
+  const res = await fetch(`/api/carts/${userId}`, {
+    method: 'DELETE',
+    headers: { Authorization: `Bearer ${idToken}` }
+  });
+  if (!res.ok) {
+    const text = await res.text();
+    throw new Error(text || `HTTP ${res.status}`);
+  }
+}
+
 
 export default function CartSupabaseSync() {
   const { user } = useAuth();
@@ -15,11 +63,11 @@ export default function CartSupabaseSync() {
   const prevUserRef = useRef();
   const location = useLocation();
 
-  // Restore cart from Supabase on login
+  // Restore cart from backend on login
   useEffect(() => {
     if (user) {
-      supabase.from('carts').select('cart').eq('user_id', user.uid).single().then(({ data }) => {
-        if (data && data.cart) setCart(data.cart);
+      fetchCart(user).then(cartData => {
+        if (cartData && cartData.length > 0) setCart(cartData);
       });
     }
   }, [user, setCart]);
@@ -29,14 +77,15 @@ export default function CartSupabaseSync() {
     if (prevUserRef.current && !user) {
       // User just logged out
       const prevUserId = prevUserRef.current.uid;
+      const prevUser = prevUserRef.current;
       (async () => {
         // Save cart to localStorage before clearing for persistence
         if (cart && cart.length > 0) {
           localStorage.setItem(`cart_${prevUserId}`, JSON.stringify(cart));
-          await supabase.from('carts').upsert({ user_id: prevUserId, cart });
+          await upsertCart(prevUserId, cart, prevUser);
         } else {
           localStorage.removeItem(`cart_${prevUserId}`);
-          await deleteCartFromSupabase(prevUserId);
+          await deleteCart(prevUserId, prevUser);
         }
         clearCart();
       })();
@@ -46,7 +95,7 @@ export default function CartSupabaseSync() {
   }, [user]);
 
   // Optionally, you can listen for a custom event or location change to handle checkout cart deletion
-  // (Or call deleteCartFromSupabase in your checkout logic directly)
+  // (Or call deleteCart in your checkout logic directly)
 
   return null;
-} 
+}

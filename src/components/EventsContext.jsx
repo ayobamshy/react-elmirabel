@@ -1,6 +1,5 @@
 import { createContext, useContext, useEffect, useState } from 'react';
 import { useAuth } from './AuthContext';
-import { supabase } from '../supabaseClient';
 
 const EventsContext = createContext();
 
@@ -26,16 +25,26 @@ export function EventsProvider({ children }) {
     setLoading(true);
     setError(null);
     try {
-      // Optionally, you can require auth here if you want to restrict admin events
-      const { data, error } = await supabase
-        .from('events')
-        .select('*')
-        .order('date', { ascending: true });
-      if (error) {
-        setError(error.message);
+      if (!user) throw new Error('Not authenticated');
+      const idToken = await user.getIdToken();
+      const res = await fetch('/api/events', {
+        headers: { Authorization: `Bearer ${idToken}` }
+      });
+      if (!res.ok) {
+        const text = await res.text();
+        throw new Error(text || `HTTP ${res.status}`);
+      }
+      let payload;
+      try {
+        payload = await res.json();
+      } catch (e) {
+        throw new Error('Invalid JSON from /api/events');
+      }
+      if (payload.error) {
+        setError(payload.error);
         setEvents([]);
       } else {
-        setEvents(data || []);
+        setEvents(payload.data || []);
       }
     } catch (err) {
       setError(err.message);
@@ -47,10 +56,29 @@ export function EventsProvider({ children }) {
   // CRUD functions that use the current user
   const addEvent = async (event) => {
     try {
-      const { data, error } = await supabase
-        .from('events')
-        .insert([event])
-        .select();
+      if (!user) throw new Error('Not authenticated');
+      const idToken = await user.getIdToken();
+      const payload = {
+        title: event.title,
+        date: event.date,
+        time: event.time,
+        image: event.image,
+        description: event.description,
+        featured: !!event.featured
+      };
+      const res = await fetch('/api/events', {
+        method: 'POST',
+        headers: {
+          Authorization: `Bearer ${idToken}`,
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify(payload)
+      });
+      if (!res.ok) {
+        const text = await res.text();
+        return { data: null, error: text || `HTTP ${res.status}` };
+      }
+      let { data, error } = await res.json();
       if (!error && data) {
         await refreshEvents();
       }
@@ -62,13 +90,29 @@ export function EventsProvider({ children }) {
 
   const updateEvent = async (id, updatedEvent) => {
     try {
-      // Exclude id and created_at from payload
-      const { id: _id, created_at, ...eventPayload } = updatedEvent;
-      const { data, error } = await supabase
-        .from('events')
-        .update(eventPayload)
-        .eq('id', id)
-        .select();
+      if (!user) throw new Error('Not authenticated');
+      const idToken = await user.getIdToken();
+      const eventPayload = {
+        title: updatedEvent.title,
+        date: updatedEvent.date,
+        time: updatedEvent.time,
+        image: updatedEvent.image,
+        description: updatedEvent.description,
+        featured: !!updatedEvent.featured
+      };
+      const res = await fetch(`/api/events/${id}`, {
+        method: 'PUT',
+        headers: {
+          Authorization: `Bearer ${idToken}`,
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify(eventPayload)
+      });
+      if (!res.ok) {
+        const text = await res.text();
+        return { data: null, error: text || `HTTP ${res.status}` };
+      }
+      let { data, error } = await res.json();
       if (!error && data) {
         await refreshEvents();
       }
@@ -80,11 +124,17 @@ export function EventsProvider({ children }) {
 
   const deleteEvent = async (id) => {
     try {
-      const { data, error } = await supabase
-        .from('events')
-        .delete()
-        .eq('id', id)
-        .select();
+      if (!user) throw new Error('Not authenticated');
+      const idToken = await user.getIdToken();
+      const res = await fetch(`/api/events/${id}`, {
+        method: 'DELETE',
+        headers: { Authorization: `Bearer ${idToken}` }
+      });
+      if (!res.ok) {
+        const text = await res.text();
+        return { data: null, error: text || `HTTP ${res.status}` };
+      }
+      let { data, error } = await res.json();
       if (!error && data) {
         await refreshEvents();
       }
@@ -96,7 +146,7 @@ export function EventsProvider({ children }) {
 
   useEffect(() => {
     // Fetch events when user changes (login/logout)
-    refreshEvents();
+    if (user) refreshEvents();
   }, [user]);
 
   return (
