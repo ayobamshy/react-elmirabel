@@ -2,7 +2,6 @@ import { createContext, useContext, useEffect, useState } from 'react';
 import { useAuth } from './AuthContext';
 
 const EventsContext = createContext();
-const API_BASE_URL = 'http://localhost:3001/api';
 
 // Helper function to get Firebase ID token
 async function getAuthHeaders(user) {
@@ -26,22 +25,26 @@ export function EventsProvider({ children }) {
     setLoading(true);
     setError(null);
     try {
-      // Check if user is authenticated before making request
-      if (!user) {
-        setEvents([]); // Clear events if not authenticated
-        setLoading(false);
-        return;
+      if (!user) throw new Error('Not authenticated');
+      const idToken = await user.getIdToken();
+      const res = await fetch('/api/events', {
+        headers: { Authorization: `Bearer ${idToken}` }
+      });
+      if (!res.ok) {
+        const text = await res.text();
+        throw new Error(text || `HTTP ${res.status}`);
       }
-      
-      const headers = await getAuthHeaders(user);
-      const response = await fetch(`${API_BASE_URL}/events`, { headers });
-      const result = await response.json();
-      
-      if (response.ok && !result.error) {
-        setEvents(result.data || []);
-      } else {
-        setError(result.error || 'Failed to fetch events');
+      let payload;
+      try {
+        payload = await res.json();
+      } catch (e) {
+        throw new Error('Invalid JSON from /api/events');
+      }
+      if (payload.error) {
+        setError(payload.error);
         setEvents([]);
+      } else {
+        setEvents(payload.data || []);
       }
     } catch (err) {
       setError(err.message);
@@ -53,22 +56,33 @@ export function EventsProvider({ children }) {
   // CRUD functions that use the current user
   const addEvent = async (event) => {
     try {
-      if (!user) {
-        return { data: null, error: 'User not authenticated' };
-      }
-      
-      const headers = await getAuthHeaders(user);
-      const response = await fetch(`${API_BASE_URL}/events`, {
+      if (!user) throw new Error('Not authenticated');
+      const idToken = await user.getIdToken();
+      const payload = {
+        title: event.title,
+        date: event.date,
+        time: event.time,
+        image: event.image,
+        description: event.description,
+        featured: !!event.featured
+      };
+      const res = await fetch('/api/events', {
         method: 'POST',
-        headers,
-        body: JSON.stringify(event)
+        headers: {
+          Authorization: `Bearer ${idToken}`,
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify(payload)
       });
-      const result = await response.json();
-      
-      if (result.data && !result.error) {
-        await refreshEvents(); // Refresh the events list
+      if (!res.ok) {
+        const text = await res.text();
+        return { data: null, error: text || `HTTP ${res.status}` };
       }
-      return result;
+      let { data, error } = await res.json();
+      if (!error && data) {
+        await refreshEvents();
+      }
+      return { data, error };
     } catch (error) {
       return { data: null, error: error.message };
     }
@@ -76,48 +90,55 @@ export function EventsProvider({ children }) {
 
   const updateEvent = async (id, updatedEvent) => {
     try {
-      if (!user) {
-        return { data: null, error: 'User not authenticated' };
-      }
-      
-      // Exclude id and created_at from payload
-      const { id: _id, created_at, ...eventPayload } = updatedEvent;
-      
-      const headers = await getAuthHeaders(user);
-      const response = await fetch(`${API_BASE_URL}/events/${id}`, {
+      if (!user) throw new Error('Not authenticated');
+      const idToken = await user.getIdToken();
+      const eventPayload = {
+        title: updatedEvent.title,
+        date: updatedEvent.date,
+        time: updatedEvent.time,
+        image: updatedEvent.image,
+        description: updatedEvent.description,
+        featured: !!updatedEvent.featured
+      };
+      const res = await fetch(`/api/events/${id}`, {
         method: 'PUT',
-        headers,
+        headers: {
+          Authorization: `Bearer ${idToken}`,
+          'Content-Type': 'application/json'
+        },
         body: JSON.stringify(eventPayload)
       });
-      const result = await response.json();
-      
-      if (result.data && !result.error) {
-        await refreshEvents(); // Refresh the events list
+      if (!res.ok) {
+        const text = await res.text();
+        return { data: null, error: text || `HTTP ${res.status}` };
       }
-      return result;
+      let { data, error } = await res.json();
+      if (!error && data) {
+        await refreshEvents();
+      }
+      return { data, error };
     } catch (error) {
-      console.error('[updateEvent] Error:', error);
       return { data: null, error: error.message };
     }
   };
 
   const deleteEvent = async (id) => {
     try {
-      if (!user) {
-        return { data: null, error: 'User not authenticated' };
-      }
-      
-      const headers = await getAuthHeaders(user);
-      const response = await fetch(`${API_BASE_URL}/events/${id}`, {
+      if (!user) throw new Error('Not authenticated');
+      const idToken = await user.getIdToken();
+      const res = await fetch(`/api/events/${id}`, {
         method: 'DELETE',
-        headers
+        headers: { Authorization: `Bearer ${idToken}` }
       });
-      const result = await response.json();
-      
-      if (result.data && !result.error) {
-        await refreshEvents(); // Refresh the events list
+      if (!res.ok) {
+        const text = await res.text();
+        return { data: null, error: text || `HTTP ${res.status}` };
       }
-      return result;
+      let { data, error } = await res.json();
+      if (!error && data) {
+        await refreshEvents();
+      }
+      return { data, error };
     } catch (error) {
       return { data: null, error: error.message };
     }
@@ -125,7 +146,7 @@ export function EventsProvider({ children }) {
 
   useEffect(() => {
     // Fetch events when user changes (login/logout)
-    refreshEvents();
+    if (user) refreshEvents();
   }, [user]);
 
   return (

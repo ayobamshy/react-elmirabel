@@ -14,19 +14,19 @@ export default function ProductCard({ product, imageLinkTo }) {
   };
 
   return (
-    <div className="bg-white rounded-2xl shadow-lg border border-[#bfa76a]/30 flex flex-col overflow-hidden hover:shadow-2xl transition-transform hover:-translate-y-1 relative w-full max-w-xs mx-auto sm:max-w-sm md:max-w-none">
+    <div className="bg-white rounded-2xl shadow-lg border border-[#bfa76a]/30 flex flex-col overflow-hidden hover:shadow-2xl transition-transform hover:-translate-y-1 relative w-full max-w-xs mx-auto sm:max-w-sm md:max-w-none h-[500px]">
       {showMsg && (
         <div className="absolute top-3 right-3 bg-[#bfa76a] text-[#2d1a09] px-4 py-2 rounded-full shadow-lg text-sm font-semibold z-20 animate-fade-in-out">
           Added to cart!
         </div>
       )}
-      <div className="aspect-w-1 aspect-h-1 w-full flex items-center justify-center overflow-hidden bg-[#f5e9c8]">
+      <div className="w-full h-56 flex items-center justify-center overflow-hidden bg-[#f5e9c8]">
         {imageLinkTo ? (
           <Link to={imageLinkTo} tabIndex={0} aria-label={`View ${product.name} in catalog`} style={{ display: 'block', width: '100%', height: '100%' }}>
             <img
               src={product.image || '/images/placeholder.png'}
               alt={product.name}
-              className="object-cover w-full h-full max-w-[220px] max-h-[220px] rounded-2xl mx-auto cursor-pointer hover:opacity-80 transition"
+              className="object-cover w-full h-full rounded-2xl mx-auto cursor-pointer hover:opacity-80 transition"
               loading="lazy"
               onError={e => { e.target.onerror = null; e.target.src = '/images/placeholder.png'; }}
             />
@@ -35,7 +35,7 @@ export default function ProductCard({ product, imageLinkTo }) {
           <img
             src={product.image || '/images/placeholder.png'}
             alt={product.name}
-            className="object-cover w-full h-full max-w-[220px] max-h-[220px] rounded-2xl mx-auto"
+            className="object-cover w-full h-full rounded-2xl mx-auto"
             loading="lazy"
             onError={e => { e.target.onerror = null; e.target.src = '/images/placeholder.png'; }}
           />
@@ -43,7 +43,7 @@ export default function ProductCard({ product, imageLinkTo }) {
       </div>
       <div className="p-4 sm:p-5 flex flex-col flex-1">
         <h3 className="font-bold text-lg sm:text-xl text-[#2d1a09] mb-1">{product.name}</h3>
-        <p className="text-[#4b320d]/80 text-sm sm:text-base mb-2 flex-1">{product.description}</p>
+        <p className="text-[#4b320d]/80 text-sm sm:text-base mb-2 flex-1 line-clamp-2">{product.description}</p>
         <div className="flex flex-col xs:flex-row items-stretch xs:items-center justify-between mt-2 gap-2 xs:gap-2">
           <span className="font-semibold text-[#bfa76a] text-lg sm:text-xl">₦{product.price.toLocaleString()}</span>
           <input

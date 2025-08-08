@@ -42,12 +42,13 @@ export default function Catalog() {
   return (
     <div className="max-w-7xl mx-auto px-2 sm:px-4 py-8 sm:py-12">
       <h1 className="text-3xl sm:text-4xl font-extrabold text-[#bfa76a] mb-8 sm:mb-10 text-center font-serif tracking-widest drop-shadow">Our Collection</h1>
-      <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6 sm:gap-8">
+      <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6 sm:gap-8 items-stretch">
         {products.map(product => (
           <div
             key={product.id}
             id={`product-${product.id}`}
             ref={el => (productRefs.current[product.id] = el)}
+            className="h-full flex flex-col"
           >
             <ProductCard product={product} />
           </div>
