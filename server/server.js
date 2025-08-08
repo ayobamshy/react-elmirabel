@@ -119,6 +119,59 @@ app.delete('/api/events/:id', verifyFirebaseToken, async (req, res) => {
   }
 });
 
+// Carts CRUD endpoints
+
+// GET cart for user
+app.get('/api/carts/:user_id', verifyFirebaseToken, async (req, res) => {
+  try {
+    const { user_id } = req.params;
+    const { data, error } = await supabase
+      .from('carts')
+      .select('*')
+      .eq('user_id', user_id)
+      .single();
+    if (error && error.code !== 'PGRST116') throw error; // PGRST116: No rows found
+    res.json({ data, error: null });
+  } catch (error) {
+    console.error('Get cart error:', error);
+    res.status(500).json({ data: null, error: error.message });
+  }
+});
+
+// UPSERT cart for user
+app.post('/api/carts/:user_id', verifyFirebaseToken, async (req, res) => {
+  try {
+    const { user_id } = req.params;
+    const { cart } = req.body;
+    const { data, error } = await supabase
+      .from('carts')
+      .upsert({ user_id, cart })
+      .select();
+    if (error) throw error;
+    res.json({ data, error: null });
+  } catch (error) {
+    console.error('Upsert cart error:', error);
+    res.status(500).json({ data: null, error: error.message });
+  }
+});
+
+// DELETE cart for user
+app.delete('/api/carts/:user_id', verifyFirebaseToken, async (req, res) => {
+  try {
+    const { user_id } = req.params;
+    const { data, error } = await supabase
+      .from('carts')
+      .delete()
+      .eq('user_id', user_id)
+      .select();
+    if (error) throw error;
+    res.json({ data, error: null });
+  } catch (error) {
+    console.error('Delete cart error:', error);
+    res.status(500).json({ data: null, error: error.message });
+  }
+});
+
 // Health check
 app.get('/health', (req, res) => {
   res.json({ status: 'OK', timestamp: new Date().toISOString() });

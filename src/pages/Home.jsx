@@ -1,6 +1,7 @@
 import { useEffect, useState } from 'react';
 import ProductCard from '../components/ProductCard';
 import { useProducts } from '../components/ProductsContext';
+import { supabase } from '../supabaseClient';
 import { Link } from 'react-router-dom';
 
 const testimonials = [
@@ -21,8 +22,17 @@ const testimonials = [
 export default function Home() {
   const [events, setEvents] = useState([]);
   const { products } = useProducts();
+
   useEffect(() => {
-    import('../data/events.json').then(mod => setEvents(mod.default || mod));
+    async function fetchFeaturedEvents() {
+      const { data, error } = await supabase
+        .from('events')
+        .select('*')
+        .eq('featured', true)
+        .order('date', { ascending: true });
+      setEvents(data || []);
+    }
+    fetchFeaturedEvents();
   }, []);
 
   useEffect(() => {

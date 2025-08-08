@@ -45,3 +45,10 @@ server/.env.*
 CONTACT_SETUP.md
 GEMINI.md
 settings.json
+
+
+#artifacts
+ADD_FEATURED_COLUMN_EVENTS.sql
+public/images
+public/products-local-images.csv
+public/products-sample.csv
