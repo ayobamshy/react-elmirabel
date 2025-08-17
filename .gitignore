@@ -52,3 +52,5 @@ ADD_FEATURED_COLUMN_EVENTS.sql
 public/images
 public/products-local-images.csv
 public/products-sample.csv
+# Ignore SQL dump and migration files
+*.sql
