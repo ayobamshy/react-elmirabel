@@ -153,7 +153,60 @@ src/
 ├── data/                     # Sample data
 └── ...
 ```
+ 
+---
 
+## 📘 Simple Guide to Our Components
+
+This short, non-technical guide explains the main components so contributors and admins can quickly find where to look when something needs fixing.
+
+### Main Parts (Components)
+
+**Auth Stuff (`AuthContext.jsx`)**
+- Think of this as the bouncer at a club — it checks whether you're logged in.
+- Remembers who you are (regular user or admin).
+- Handles social login (Google/Facebook) and reports login errors.
+
+**Shopping Cart (`CartContext.jsx` & `Cart.jsx`)**
+- A digital shopping cart that remembers what wines you want to buy.
+- Persists the cart across sessions (localStorage + Supabase sync).
+- Shows total price and quantity; lets you add/remove items and change quantities.
+
+**Product Display (`ProductsContext.jsx` & `Catalog.jsx`)**
+- The wine shelf of our store — shows wines, prices, and images.
+- Admins can add or edit products here.
+- Handles searching, sorting, and filtering.
+
+**Events Management (`EventsContext.jsx` & `Events.jsx`)**
+- The calendar for wine tastings and special events.
+- Shows upcoming events with dates and details; admins can create/edit events.
+
+**Contact Form (`Contact.jsx`)**
+- A suggestion box that only works for logged-in users.
+- Auto-fills the user's email and sends messages via Formspree.
+
+**Admin Dashboard (`Admin.jsx`, `AdminProducts.jsx`, `AdminEvents.jsx`)**
+- Control center for store managers: change prices, add wines, create events, manage orders.
+- If you can't access these pages, check that your email is configured as an admin.
+
+**Shopping Process (`Checkout.jsx`)**
+- The cashier — shows the final bill and handles payment (Stripe integration when configured).
+
+### Common Problems & Where to Look
+
+- Can't log in? Check `AuthContext.jsx` and your Firebase config.
+- Cart not persisting or wrong totals? Check `CartContext.jsx` and Supabase sync logic.
+- Products not showing? Inspect `ProductsContext.jsx` and `data/products.json`.
+- Events missing or wrong dates? Check `EventsContext.jsx` and `data/events.json`.
+- Admin pages not visible? Verify the admin email(s) in `server` config or environment variables.
+
+### Implementation notes
+
+- This section is intentionally non-technical — it points contributors to the files to check first.
+- Add screenshots or short GIFs where helpful (screenshots can live in `/public/images/docs/`).
+- Link to this section from any top-level table-of-contents if you add one.
+
+---
 ---
 
 ## 🎯 Admin Features
