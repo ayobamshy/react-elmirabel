@@ -54,3 +54,4 @@ public/products-local-images.csv
 public/products-sample.csv
 # Ignore SQL dump and migration files
 *.sql
+
